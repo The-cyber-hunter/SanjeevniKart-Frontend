@@ -266,7 +266,7 @@ export default function WholesalePage() {
                             </button>
 
                             <a
-                                href={`https://wa.me/919876543210?text=${whatsappMessage()}`}
+                                href={`https://wa.me/916206895209?text=${whatsappMessage()}`}
                                 target="_blank"
                                 className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg"
                             >

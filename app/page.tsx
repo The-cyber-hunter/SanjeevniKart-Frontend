@@ -237,9 +237,9 @@ export default function HomePage() {
           <div>
             <h3 className="text-xl font-bold mb-4">Contact</h3>
             <p className="text-gray-300 text-sm">
-              Email: support@sanjeevnikart.com
+              Email: sanjeevnikart@gmail.com
             </p>
-            <p className="text-gray-300 text-sm">Phone: +91 9876543210</p>
+            <p className="text-gray-300 text-sm">Phone: +91 6206895209</p>
           </div>
         </div>
 
@@ -251,14 +251,14 @@ export default function HomePage() {
       {/* ================= FLOATING BUTTONS ================= */}
       <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50">
         <a
-          href="tel:+911234567890"
+          href="tel:+916206895209"
           className="bg-green-600 hover:bg-green-700 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl ring-2 ring-green-300 transition hover:scale-110"
         >
           <Phone size={26} />
         </a>
 
         <a
-          href="mailto:support@sanjeevnikart.com"
+          href="mailto:sanjeevnikart@gmail.com"
           className="bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl ring-2 ring-blue-300 transition hover:scale-110"
         >
           <Mail size={26} />
