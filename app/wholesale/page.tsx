@@ -11,12 +11,55 @@ type Veg = {
 
 // Placeholder images, replace with your own saved images in /public/images/vegetables/
 const vegetables: Veg[] = [
-    { id: 1, name: "Potato", price: 600, img: "/images/vegetables/potato.jpg" },
-    { id: 2, name: "Onion", price: 750, img: "/images/vegetables/onion.jpg" },
-    { id: 3, name: "Tomato", price: 900, img: "/images/vegetables/tomato.jpg" },
-    { id: 4, name: "Cauliflower", price: 1200, img: "/images/vegetables/cauliflower.jpg" },
-    { id: 5, name: "Cabbage", price: 850, img: "/images/vegetables/cabbage.jpg" },
+    // Leafy & Green
+    { id: 1, name: "Spinach (पालक)", price: 550, img: "/images/vegetables/spinach.jpg" },
+    { id: 2, name: "Fenugreek (मेथी)", price: 560, img: "/images/vegetables/fenugreek.jpg" },
+    { id: 3, name: "Mustard Greens (सरसों)", price: 570, img: "/images/vegetables/mustard.jpg" },
+    { id: 4, name: "Lettuce (लेट्यूस)", price: 575, img: "/images/vegetables/lettuce.jpg" },
+    { id: 5, name: "Cabbage (पत्तागोभी)", price: 550, img: "/images/vegetables/cabbage.jpg" },
+    { id: 6, name: "Kale (काले)", price: 560, img: "/images/vegetables/kale.jpg" },
+    { id: 7, name: "Coriander (धनिया)", price: 540, img: "/images/vegetables/coriander.jpg" },
+    { id: 8, name: "Mint (पुदीना)", price: 545, img: "/images/vegetables/mint.jpg" },
+
+    // Root & Tuber
+    { id: 9, name: "Potato (आलू)", price: 550, img: "/images/vegetables/potato.jpg" },
+    { id: 10, name: "Sweet Potato (शकरकंद)", price: 560, img: "/images/vegetables/sweet_potato.jpg" },
+    { id: 11, name: "Carrot (गाजर)", price: 560, img: "/images/vegetables/carrot.jpg" },
+    { id: 12, name: "Beetroot (चुकंदर)", price: 550, img: "/images/vegetables/beetroot.jpg" },
+    { id: 13, name: "Radish (मूली)", price: 540, img: "/images/vegetables/radish.jpg" },
+    { id: 14, name: "Turnip (शलगम)", price: 545, img: "/images/vegetables/turnip.jpg" },
+    { id: 15, name: "Yam (रतालू / जिमीकंद)", price: 575, img: "/images/vegetables/yam.jpg" },
+
+    // Fruiting Vegetables
+    { id: 16, name: "Tomato (टमाटर)", price: 560, img: "/images/vegetables/tomato.jpg" },
+    { id: 17, name: "Capsicum (शिमला मिर्च)", price: 575, img: "/images/vegetables/capsicum.jpg" },
+    { id: 18, name: "Brinjal (बैंगन)", price: 550, img: "/images/vegetables/brinjal.jpg" },
+    { id: 19, name: "Cucumber (खीरा)", price: 550, img: "/images/vegetables/cucumber.jpg" },
+    { id: 20, name: "Pumpkin (कद्दू)", price: 560, img: "/images/vegetables/pumpkin.jpg" },
+    { id: 21, name: "Bottle Gourd (लौकी / दुधी)", price: 550, img: "/images/vegetables/bottle_gourd.jpg" },
+    { id: 22, name: "Ridge Gourd (तुरई / तुरिया)", price: 555, img: "/images/vegetables/ridge_gourd.jpg" },
+    { id: 23, name: "Bitter Gourd (करेला)", price: 565, img: "/images/vegetables/bitter_gourd.jpg" },
+    { id: 24, name: "Snake Gourd (चिचिंडा / पडल)", price: 555, img: "/images/vegetables/snake_gourd.jpg" },
+    { id: 25, name: "Zucchini (जुचिनी)", price: 575, img: "/images/vegetables/zucchini.jpg" },
+
+    // Legumes / Beans
+    { id: 27, name: "Cluster Beans (गवार / गवार)", price: 555, img: "/images/vegetables/cluster_beans.jpg" },
+    { id: 29, name: "Peas (मटर)", price: 560, img: "/images/vegetables/peas.jpg" },
+    { id: 30, name: "Broad Beans (सेम / पापड़ी)", price: 565, img: "/images/vegetables/broad_beans.jpg" },
+    { id: 31, name: "Cowpeas (लोबिया)", price: 550, img: "/images/vegetables/cowpeas.jpg" },
+
+    // Others / Exotic
+    { id: 32, name: "Cauliflower (फूलगोभी)", price: 565, img: "/images/vegetables/cauliflower.jpg" },
+    { id: 33, name: "Broccoli (ब्रोकोली)", price: 575, img: "/images/vegetables/broccoli.jpg" },
+    { id: 34, name: "Mushrooms (खुम्बी)", price: 575, img: "/images/vegetables/mushroom.jpg" },
+    { id: 35, name: "Drumstick (सहजन / मोरिंगा)", price: 550, img: "/images/vegetables/drumstick.jpg" },
+    { id: 36, name: "Okra / Ladyfinger (भिंडी)", price: 550, img: "/images/vegetables/okra.jpg" },
+    { id: 37, name: "Ginger (अदरक)", price: 560, img: "/images/vegetables/ginger.jpg" },
+    { id: 38, name: "Green Chili (हरी मिर्च)", price: 560, img: "/images/vegetables/green_chili.jpg" },
+     { id: 39, name: "Garlic (लहसुन)", price: 560, img: "/images/vegetables/garlic.jpg" }
 ];
+
+
 
 export default function WholesalePage() {
     const [selected, setSelected] = useState<Record<number, number>>({});
