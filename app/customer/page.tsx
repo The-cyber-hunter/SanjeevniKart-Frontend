@@ -22,7 +22,7 @@ const vegetables: Veg[] = [
 ];
 
 export default function CustomerPage() {
-  const [selected, setSelected] = useState<Record<number, number>>({});
+  const [selected, setSelected] = useState<Record<number, string>>({});
   const [showModal, setShowModal] = useState(false);
   const [pincode, setPincode] = useState("");
   const [pincodeError, setPincodeError] = useState("");
@@ -34,28 +34,55 @@ export default function CustomerPage() {
     address: "",
   });
 
+  /* ---------- Quantity Logic (Retail-style) ---------- */
+
   const toggleVeg = (id: number) => {
     setSelected((prev) => {
       const copy = { ...prev };
       if (copy[id]) delete copy[id];
-      else copy[id] = 0.5; // default 0.5 kg
+      else copy[id] = "0.5"; // default 0.5 kg
       return copy;
     });
   };
 
-  const updateQty = (id: number, qty: number) => {
-    setSelected((prev) => ({ ...prev, [id]: Math.max(0.5, qty) }));
+  const updateQty = (id: number, value: string) => {
+    if (value === "") {
+      setSelected((prev) => ({ ...prev, [id]: "" }));
+      return;
+    }
+
+    const num = parseFloat(value);
+    if (!isNaN(num)) {
+      setSelected((prev) => ({ ...prev, [id]: value }));
+    }
   };
 
-  const selectedList = vegetables.filter((v) => selected[v.id]);
+  const validateQty = (id: number) => {
+    const num = parseFloat(selected[id]);
+    if (isNaN(num) || num < 0.5) {
+      setSelected((prev) => ({ ...prev, [id]: "0.5" }));
+    }
+  };
+
+  /* ---------- Helpers ---------- */
+
+  const selectedList = vegetables.filter(
+    (v) => selected[v.id] && selected[v.id] !== ""
+  );
+
+  const getQty = (id: number) =>
+    selected[id] ? parseFloat(selected[id]) : 0;
 
   const getVegPrice = (v: Veg) => {
-    const qty = selected[v.id] || 0;
+    const qty = getQty(v.id);
     const delivery = qty < 3 && qty > 0 ? 10 : 0;
     return v.price * qty + delivery;
   };
 
-  const totalPrice = selectedList.reduce((sum, v) => sum + getVegPrice(v), 0);
+  const totalPrice = selectedList.reduce(
+    (sum, v) => sum + getVegPrice(v),
+    0
+  );
 
   const whatsappMessage = () => {
     let msg = `Customer Order - Sanjeevni Kart\n\n`;
@@ -67,13 +94,12 @@ export default function CustomerPage() {
     msg += `Vegetables:\n`;
 
     selectedList.forEach((v) => {
-      const qty = selected[v.id];
+      const qty = getQty(v.id);
       const price = getVegPrice(v).toFixed(2);
       msg += `- ${v.name}: ${qty} kg – ₹${price}\n`;
     });
 
     msg += `\nTotal to Pay: ₹${totalPrice.toFixed(2)}`;
-
     return encodeURIComponent(msg);
   };
 
@@ -83,36 +109,40 @@ export default function CustomerPage() {
       return;
     }
     setPincodeError("");
-    // Open WhatsApp
-    window.open(`https://wa.me/916206895209?text=${whatsappMessage()}`, "_blank");
+    window.open(
+      `https://wa.me/916206895209?text=${whatsappMessage()}`,
+      "_blank"
+    );
   };
 
   return (
     <main className="bg-[#f6faf7] min-h-screen text-gray-800">
       <div className="max-w-6xl mx-auto px-6 py-16">
-        {/* Navigation Buttons */}
+
+        {/* Navigation */}
         <div className="flex flex-wrap gap-4 mb-10">
           <a href="/" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">Home</a>
           <a href="/wholesale" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">Wholesale /25kg</a>
           <a href="/retail" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">Retail /10kg</a>
         </div>
 
-        <h1 className="text-4xl font-bold text-green-700 mb-10">Customer Vegetable Order</h1>
+        <h1 className="text-4xl font-bold text-green-700 mb-10">
+          Customer Vegetable Order
+        </h1>
 
         {/* Vegetable List */}
         <div className="grid md:grid-cols-2 gap-6">
           {vegetables.map((veg) => {
-            const qty = selected[veg.id] || 0;
+            const qtyStr = selected[veg.id] ?? "";
+            const qty = qtyStr === "" ? 0 : parseFloat(qtyStr);
             const vegPrice = getVegPrice(veg).toFixed(2);
 
             return (
               <div key={veg.id} className="border border-green-100 rounded-2xl p-6 bg-white shadow hover:shadow-lg transition flex items-center gap-4">
-                {/* Image */}
-                <div className="w-24 h-24 flex-shrink-0 bg-green-50 rounded-lg overflow-hidden flex items-center justify-center">
+                <div className="w-24 h-24 bg-green-50 rounded-lg overflow-hidden flex items-center justify-center">
                   <img src={veg.img} alt={veg.name} className="object-contain h-full w-full" />
                 </div>
 
-                {/* Text & Checkbox */}
                 <div className="flex-1">
                   <div className="flex justify-between items-center">
                     <div>
@@ -134,13 +164,19 @@ export default function CustomerPage() {
                         type="number"
                         min={0.5}
                         step={0.5}
-                        value={qty}
-                        onChange={(e) => updateQty(veg.id, Number(e.target.value))}
+                        value={qtyStr}
+                        onChange={(e) => updateQty(veg.id, e.target.value)}
+                        onBlur={() => validateQty(veg.id)}
                         className="block mt-1 w-28 border border-green-200 rounded-lg px-3 py-2 text-gray-800"
                       />
-                      {/* Live Price */}
-                      <p className="mt-2 text-gray-800 font-semibold">
-                        Price: ₹{vegPrice} {qty < 3 && qty > 0 && <span className="text-red-600 font-bold flex items-center gap-1"><AlertTriangle size={16} /> incl. ₹10 Delivery</span>}
+
+                      <p className="mt-2 text-gray-800 font-semibold flex items-center gap-2">
+                        Price: ₹{vegPrice}
+                        {qty < 3 && qty > 0 && (
+                          <span className="text-red-600 font-bold flex items-center gap-1">
+                            <AlertTriangle size={16} /> incl. ₹10 Delivery
+                          </span>
+                        )}
                       </p>
                     </div>
                   )}
@@ -150,7 +186,7 @@ export default function CustomerPage() {
           })}
         </div>
 
-        {/* Proceed Button */}
+        {/* Proceed */}
         {selectedList.length > 0 && (
           <div className="mt-12">
             <button
@@ -167,18 +203,19 @@ export default function CustomerPage() {
       {showModal && (
         <div className="fixed inset-0 bg-green-900/20 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white w-full max-w-lg rounded-2xl p-6 shadow-xl">
-            <h2 className="text-2xl font-bold mb-4 text-green-700">Confirm Your Order</h2>
+            <h2 className="text-2xl font-bold mb-4 text-green-700">
+              Confirm Your Order
+            </h2>
 
-            {/* Selected Vegetables */}
             <div className="mb-4 space-y-1">
               {selectedList.map((v) => {
-                const qty = selected[v.id];
+                const qty = getQty(v.id);
                 const vegPrice = (v.price * qty).toFixed(2);
-                const deliveryCharge = qty < 3 ? 10 : 0;
+                const delivery = qty < 3 ? 10 : 0;
                 return (
                   <p key={v.id}>
                     {v.name} – {qty} kg – ₹{vegPrice}
-                    {deliveryCharge > 0 && (
+                    {delivery > 0 && (
                       <span className="text-red-600 font-bold ml-2 animate-pulse">
                         + ₹10 Delivery
                       </span>
@@ -188,33 +225,34 @@ export default function CustomerPage() {
               })}
             </div>
 
-            {/* Total */}
             <div className="mt-4 font-bold text-lg">
               Total to Pay: ₹{totalPrice.toFixed(2)}
             </div>
 
-            {/* Form */}
             <div className="space-y-3 mt-4">
-              <input type="text" placeholder="Buyer Name" className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-              <input type="tel" placeholder="Phone Number" className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-              <input type="email" placeholder="Email" className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-              <textarea placeholder="Delivery Address" className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
-              {/* Pincode Input */}
+              <input type="text" placeholder="Buyer Name" className="w-full border border-green-200 px-3 py-2 rounded-lg" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              <input type="tel" placeholder="Phone Number" className="w-full border border-green-200 px-3 py-2 rounded-lg" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+              <input type="email" placeholder="Email" className="w-full border border-green-200 px-3 py-2 rounded-lg" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+              <textarea placeholder="Delivery Address" className="w-full border border-green-200 px-3 py-2 rounded-lg" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+
               <input
                 type="text"
                 placeholder="Pincode"
-                className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
+                className="w-full border border-green-200 px-3 py-2 rounded-lg"
                 value={pincode}
                 onChange={(e) => setPincode(e.target.value)}
               />
               {pincodeError && (
-                <p className="text-red-600 font-semibold mt-1">{pincodeError}</p>
+                <p className="text-red-600 font-semibold mt-1">
+                  {pincodeError}
+                </p>
               )}
             </div>
 
-            {/* Buttons */}
             <div className="flex justify-between mt-6">
-              <button onClick={() => setShowModal(false)} className="border border-green-300 px-5 py-2 rounded-lg">Edit Vegetables</button>
+              <button onClick={() => setShowModal(false)} className="border border-green-300 px-5 py-2 rounded-lg">
+                Edit Vegetables
+              </button>
               <button
                 onClick={handleProceed}
                 className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg"

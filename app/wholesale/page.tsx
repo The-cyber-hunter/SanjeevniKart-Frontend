@@ -50,7 +50,7 @@ const vegetables: Veg[] = [
 ];
 
 export default function WholesalePage() {
-  const [selected, setSelected] = useState<Record<number, number>>({});
+  const [selected, setSelected] = useState<Record<number, string>>({});
   const [showModal, setShowModal] = useState(false);
   const [pincode, setPincode] = useState("");
   const [pincodeError, setPincodeError] = useState("");
@@ -66,18 +66,35 @@ export default function WholesalePage() {
     setSelected((prev) => {
       const copy = { ...prev };
       if (copy[id]) delete copy[id];
-      else copy[id] = 25; // default 25kg
+      else copy[id] = "25"; // default 25kg
       return copy;
     });
   };
 
-  const updateQty = (id: number, qty: number) => {
-    setSelected((prev) => ({ ...prev, [id]: Math.max(25, qty) }));
+  const updateQty = (id: number, value: string) => {
+    // allow empty string for deleting
+    if (value === "") {
+      setSelected((prev) => ({ ...prev, [id]: "" }));
+      return;
+    }
+
+    const num = parseInt(value, 10);
+    if (!isNaN(num)) {
+      setSelected((prev) => ({ ...prev, [id]: value }));
+    }
+  };
+
+  const validateQty = (id: number) => {
+    const num = parseInt(selected[id], 10);
+    if (isNaN(num) || num < 25) {
+      setSelected((prev) => ({ ...prev, [id]: "25" }));
+    }
   };
 
   const selectedList = vegetables.filter((v) => selected[v.id]);
+
   const totalPrice = selectedList.reduce(
-    (sum, v) => sum + v.price * (selected[v.id] / 25),
+    (sum, v) => sum + v.price * (parseInt(selected[v.id], 10) / 25),
     0
   );
 
@@ -91,7 +108,7 @@ export default function WholesalePage() {
     msg += `Vegetables:\n`;
 
     selectedList.forEach((v) => {
-      const qty = selected[v.id];
+      const qty = parseInt(selected[v.id], 10);
       const price = (v.price * (qty / 25)).toFixed(2);
       msg += `- ${v.name}: ${qty} kg – ₹${price}\n`;
     });
@@ -124,13 +141,17 @@ export default function WholesalePage() {
         {/* Vegetable List */}
         <div className="grid md:grid-cols-2 gap-6">
           {vegetables.map((veg) => {
-            const qty = selected[veg.id] || 0;
-            const vegPrice = (veg.price * (qty / 25)).toFixed(2);
+            const qty = selected[veg.id] || "";
+            const numQty = qty === "" ? 0 : parseInt(qty, 10);
+            const vegPrice = (veg.price * (numQty / 25)).toFixed(2);
+            const showError = qty !== "" && parseInt(qty, 10) < 25;
+
             return (
               <div key={veg.id} className="border border-green-100 rounded-2xl p-6 bg-white shadow hover:shadow-lg transition flex items-center gap-4">
                 <div className="w-24 h-24 flex-shrink-0 bg-green-50 rounded-lg overflow-hidden flex items-center justify-center">
                   <img src={veg.img} alt={veg.name} className="object-contain h-full w-full" />
                 </div>
+
                 <div className="flex-1">
                   <div className="flex justify-between items-center">
                     <div>
@@ -142,9 +163,16 @@ export default function WholesalePage() {
 
                   {selected[veg.id] && (
                     <div className="mt-4">
-                      <label className="text-sm text-gray-600">Quantity (kg)</label>
-                      <input type="number" min={25} step={1} value={qty} onChange={(e) => updateQty(veg.id, Number(e.target.value))} className="block mt-1 w-28 border border-green-200 rounded-lg px-3 py-2 text-gray-800" />
-                      <p className="mt-1 text-gray-700 font-semibold">Price: ₹{vegPrice}</p>
+                      <label className="text-sm text-gray-600">Quantity (kg) [min 25]</label>
+                      <input
+                        type="number"
+                        value={qty}
+                        onChange={(e) => updateQty(veg.id, e.target.value)}
+                        onBlur={() => validateQty(veg.id)}
+                        className={`block mt-1 w-28 border rounded-lg px-3 py-2 text-gray-800 ${showError ? "border-red-600" : "border-green-200"}`}
+                      />
+                      {showError && <p className="text-red-600 text-sm mt-1">Quantity must be at least 25 kg</p>}
+                      {!showError && qty !== "" && <p className="mt-1 text-gray-700 font-semibold">Price: ₹{vegPrice}</p>}
                     </div>
                   )}
                 </div>
@@ -170,7 +198,7 @@ export default function WholesalePage() {
             {/* Selected Vegetables */}
             <div className="mb-4 space-y-1">
               {selectedList.map((v) => {
-                const qty = selected[v.id];
+                const qty = parseInt(selected[v.id], 10);
                 const vegPrice = (v.price * (qty / 25)).toFixed(2);
                 return <p key={v.id}>{v.name} – {qty} kg – ₹{vegPrice}</p>;
               })}
