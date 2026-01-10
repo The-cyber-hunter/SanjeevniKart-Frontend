@@ -3,278 +3,205 @@
 import React, { useState } from "react";
 
 type Veg = {
-    id: number;
-    name: string;
-    price: number; // price per 10kg
-    img: string;   // image path in /public/images/vegetables/
+  id: number;
+  name: string;
+  price: number; // price per 10kg
+  img: string;
 };
 
 const vegetables: Veg[] = [
-    // Leafy & Green
-    { id: 1, name: "Spinach (पालक)", price: 220, img: "/images/vegetables/spinach.jpg" },
-    { id: 2, name: "Fenugreek (मेथी)", price: 230, img: "/images/vegetables/fenugreek.jpg" },
-    { id: 3, name: "Mustard Greens (सरसों)", price: 240, img: "/images/vegetables/mustard.jpg" },
-    { id: 4, name: "Lettuce (लेट्यूस)", price: 250, img: "/images/vegetables/lettuce.jpg" },
-    { id: 5, name: "Cabbage (पत्तागोभी)", price: 220, img: "/images/vegetables/cabbage.jpg" },
-    { id: 6, name: "Kale (काले)", price: 230, img: "/images/vegetables/kale.jpg" },
-    { id: 7, name: "Coriander (धनिया)", price: 200, img: "/images/vegetables/coriander.jpg" },
-    { id: 8, name: "Mint (पुदीना)", price: 210, img: "/images/vegetables/mint.jpg" },
-
-    // Root & Tuber
-    { id: 9, name: "Potato (आलू)", price: 220, img: "/images/vegetables/potato.jpg" },
-    { id: 10, name: "Sweet Potato (शकरकंद)", price: 240, img: "/images/vegetables/sweet_potato.jpg" },
-    { id: 11, name: "Carrot (गाजर)", price: 230, img: "/images/vegetables/carrot.jpg" },
-    { id: 12, name: "Beetroot (चुकंदर)", price: 220, img: "/images/vegetables/beetroot.jpg" },
-    { id: 13, name: "Radish (मूली)", price: 210, img: "/images/vegetables/radish.jpg" },
-    { id: 14, name: "Turnip (शलगम)", price: 220, img: "/images/vegetables/turnip.jpg" },
-    { id: 15, name: "Yam (रतालू / जिमीकंद)", price: 250, img: "/images/vegetables/yam.jpg" },
-
-    // Fruiting Vegetables
-    { id: 16, name: "Tomato (टमाटर)", price: 230, img: "/images/vegetables/tomato.jpg" },
-    { id: 17, name: "Capsicum (शिमला मिर्च)", price: 250, img: "/images/vegetables/capsicum.jpg" },
-    { id: 18, name: "Brinjal (बैंगन)", price: 220, img: "/images/vegetables/brinjal.jpg" },
-    { id: 19, name: "Cucumber (खीरा)", price: 220, img: "/images/vegetables/cucumber.jpg" },
-    { id: 20, name: "Pumpkin (कद्दू)", price: 230, img: "/images/vegetables/pumpkin.jpg" },
-    { id: 21, name: "Bottle Gourd (लौकी / दुधी)", price: 220, img: "/images/vegetables/bottle_gourd.jpg" },
-    { id: 22, name: "Ridge Gourd (तुरई / तुरिया)", price: 230, img: "/images/vegetables/ridge_gourd.jpg" },
-    { id: 23, name: "Bitter Gourd (करेला)", price: 240, img: "/images/vegetables/bitter_gourd.jpg" },
-    { id: 24, name: "Snake Gourd (चिचिंडा / पडल)", price: 230, img: "/images/vegetables/snake_gourd.jpg" },
-    { id: 25, name: "Zucchini (जुचिनी)", price: 250, img: "/images/vegetables/zucchini.jpg" },
-
-    // Legumes / Beans
-    { id: 27, name: "Cluster Beans (गवार / गवार)", price: 230, img: "/images/vegetables/cluster_beans.jpg" },
-    { id: 29, name: "Peas (मटर)", price: 220, img: "/images/vegetables/peas.jpg" },
-    { id: 30, name: "Broad Beans (सेम / पापड़ी)", price: 240, img: "/images/vegetables/broad_beans.jpg" },
-    { id: 31, name: "Cowpeas (लोबिया)", price: 220, img: "/images/vegetables/cowpeas.jpg" },
-
-    // Others / Exotic
-    { id: 32, name: "Cauliflower (फूलगोभी)", price: 240, img: "/images/vegetables/cauliflower.jpg" },
-    { id: 33, name: "Broccoli (ब्रोकोली)", price: 250, img: "/images/vegetables/broccoli.jpg" },
-    { id: 34, name: "Mushrooms (खुम्बी)", price: 250, img: "/images/vegetables/mushroom.jpg" },
-    { id: 35, name: "Drumstick (सहजन / मोरिंगा)", price: 220, img: "/images/vegetables/drumstick.jpg" },
-    { id: 36, name: "Okra / Ladyfinger (भिंडी)", price: 220, img: "/images/vegetables/okra.jpg" },
-    { id: 37, name: "Ginger (अदरक)", price: 250, img: "/images/vegetables/ginger.jpg" },
-    { id: 38, name: "Green Chili (हरी मिर्च)", price: 250, img: "/images/vegetables/green_chili.jpg" },
-    { id: 39, name: "Garlic (लहसुन)", price: 250, img: "/images/vegetables/garlic.jpg" },
+  { id: 1, name: "Spinach (पालक)", price: 220, img: "/images/vegetables/spinach.jpg" },
+  { id: 2, name: "Fenugreek (मेथी)", price: 230, img: "/images/vegetables/fenugreek.jpg" },
+  { id: 3, name: "Mustard Greens (सरसों)", price: 240, img: "/images/vegetables/mustard.jpg" },
+  { id: 4, name: "Lettuce (लेट्यूस)", price: 250, img: "/images/vegetables/lettuce.jpg" },
+  { id: 5, name: "Cabbage (पत्तागोभी)", price: 220, img: "/images/vegetables/cabbage.jpg" },
+  { id: 6, name: "Kale (काले)", price: 230, img: "/images/vegetables/kale.jpg" },
+  { id: 7, name: "Coriander (धनिया)", price: 200, img: "/images/vegetables/coriander.jpg" },
+  { id: 8, name: "Mint (पुदीना)", price: 210, img: "/images/vegetables/mint.jpg" },
+  { id: 9, name: "Potato (आलू)", price: 220, img: "/images/vegetables/potato.jpg" },
+  { id: 10, name: "Sweet Potato (शकरकंद)", price: 240, img: "/images/vegetables/sweet_potato.jpg" },
+  { id: 11, name: "Carrot (गाजर)", price: 230, img: "/images/vegetables/carrot.jpg" },
+  { id: 12, name: "Beetroot (चुकंदर)", price: 220, img: "/images/vegetables/beetroot.jpg" },
+  { id: 13, name: "Radish (मूली)", price: 210, img: "/images/vegetables/radish.jpg" },
+  { id: 14, name: "Turnip (शलगम)", price: 220, img: "/images/vegetables/turnip.jpg" },
+  { id: 15, name: "Yam (रतालू / जिमीकंद)", price: 250, img: "/images/vegetables/yam.jpg" },
+  { id: 16, name: "Tomato (टमाटर)", price: 230, img: "/images/vegetables/tomato.jpg" },
+  { id: 17, name: "Capsicum (शिमला मिर्च)", price: 250, img: "/images/vegetables/capsicum.jpg" },
+  { id: 18, name: "Brinjal (बैंगन)", price: 220, img: "/images/vegetables/brinjal.jpg" },
+  { id: 19, name: "Cucumber (खीरा)", price: 220, img: "/images/vegetables/cucumber.jpg" },
+  { id: 20, name: "Pumpkin (कद्दू)", price: 230, img: "/images/vegetables/pumpkin.jpg" },
+  { id: 21, name: "Bottle Gourd (लौकी / दुधी)", price: 220, img: "/images/vegetables/bottle_gourd.jpg" },
+  { id: 22, name: "Ridge Gourd (तुरई / तुरिया)", price: 230, img: "/images/vegetables/ridge_gourd.jpg" },
+  { id: 23, name: "Bitter Gourd (करेला)", price: 240, img: "/images/vegetables/bitter_gourd.jpg" },
+  { id: 24, name: "Snake Gourd (चिचिंडा / पडल)", price: 230, img: "/images/vegetables/snake_gourd.jpg" },
+  { id: 25, name: "Zucchini (जुचिनी)", price: 250, img: "/images/vegetables/zucchini.jpg" },
+  { id: 27, name: "Cluster Beans (गवार / गवार)", price: 230, img: "/images/vegetables/cluster_beans.jpg" },
+  { id: 29, name: "Peas (मटर)", price: 220, img: "/images/vegetables/peas.jpg" },
+  { id: 30, name: "Broad Beans (सेम / पापड़ी)", price: 240, img: "/images/vegetables/broad_beans.jpg" },
+  { id: 31, name: "Cowpeas (लोबिया)", price: 220, img: "/images/vegetables/cowpeas.jpg" },
+  { id: 32, name: "Cauliflower (फूलगोभी)", price: 240, img: "/images/vegetables/cauliflower.jpg" },
+  { id: 33, name: "Broccoli (ब्रोकोली)", price: 250, img: "/images/vegetables/broccoli.jpg" },
+  { id: 34, name: "Mushrooms (खुम्बी)", price: 250, img: "/images/vegetables/mushroom.jpg" },
+  { id: 35, name: "Drumstick (सहजन / मोरिंगा)", price: 220, img: "/images/vegetables/drumstick.jpg" },
+  { id: 36, name: "Okra / Ladyfinger (भिंडी)", price: 220, img: "/images/vegetables/okra.jpg" },
+  { id: 37, name: "Ginger (अदरक)", price: 250, img: "/images/vegetables/ginger.jpg" },
+  { id: 38, name: "Green Chili (हरी मिर्च)", price: 250, img: "/images/vegetables/green_chili.jpg" },
+  { id: 39, name: "Garlic (लहसुन)", price: 250, img: "/images/vegetables/garlic.jpg" },
 ];
 
-
-
 export default function RetailPage() {
-    const [selected, setSelected] = useState<Record<number, number>>({});
-    const [showModal, setShowModal] = useState(false);
+  const [selected, setSelected] = useState<Record<number, number>>({});
+  const [showModal, setShowModal] = useState(false);
+  const [pincode, setPincode] = useState("");
+  const [pincodeError, setPincodeError] = useState("");
 
-    const [form, setForm] = useState({
-        name: "",
-        phone: "",
-        email: "",
-        address: "",
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+  });
+
+  const toggleVeg = (id: number) => {
+    setSelected((prev) => {
+      const copy = { ...prev };
+      if (copy[id]) delete copy[id];
+      else copy[id] = 10; // default 10kg
+      return copy;
+    });
+  };
+
+  const updateQty = (id: number, qty: number) => {
+    setSelected((prev) => ({ ...prev, [id]: Math.max(10, qty) }));
+  };
+
+  const selectedList = vegetables.filter((v) => selected[v.id]);
+
+  const whatsappMessage = () => {
+    let msg = `Retail Order - Sanjeevni Kart\n\n`;
+    msg += `Name: ${form.name}\n`;
+    msg += `Phone: ${form.phone}\n`;
+    msg += `Email: ${form.email}\n`;
+    msg += `Address: ${form.address}\n`;
+    msg += `Pincode: ${pincode}\n\n`;
+    msg += `Vegetables:\n`;
+
+    selectedList.forEach((v) => {
+      const qty = selected[v.id];
+      const price = (v.price * (qty / 10)).toFixed(2);
+      msg += `- ${v.name}: ${qty} kg – ₹${price}\n`;
     });
 
-    const toggleVeg = (id: number) => {
-        setSelected((prev) => {
-            const copy = { ...prev };
-            if (copy[id]) delete copy[id];
-            else copy[id] = 10;
-            return copy;
-        });
-    };
+    const total = selectedList
+      .reduce((sum, v) => sum + v.price * (selected[v.id] / 10), 0)
+      .toFixed(2);
 
-    const updateQty = (id: number, qty: number) => {
-        setSelected((prev) => ({ ...prev, [id]: qty }));
-    };
+    msg += `\nTotal to Pay: ₹${total}`;
+    return encodeURIComponent(msg);
+  };
 
-    const selectedList = vegetables.filter((v) => selected[v.id]);
+  const handleProceed = () => {
+    if (pincode !== "821115") {
+      setPincodeError("No deliveries are available to this pincode location.");
+      return;
+    }
+    setPincodeError("");
+    window.open(`https://wa.me/916206895209?text=${whatsappMessage()}`, "_blank");
+  };
 
-    const whatsappMessage = () => {
-        let msg = `Retail Order - Sanjeevni Kart\n\n`;
-        msg += `Name: ${form.name}\n`;
-        msg += `Phone: ${form.phone}\n`;
-        msg += `Email: ${form.email}\n`;
-        msg += `Address: ${form.address}\n\n`;
-        msg += `Vegetables:\n`;
+  return (
+    <main className="bg-[#f6faf7] min-h-screen text-gray-800">
+      <div className="max-w-6xl mx-auto px-6 py-16">
+        {/* Navigation */}
+        <div className="flex flex-wrap gap-4 mb-10">
+          <a href="/" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">Home</a>
+          <a href="/wholesale" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">Wholesale /25kg</a>
+          <a href="/customer" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">Customer /1kg</a>
+        </div>
 
-        selectedList.forEach((v) => {
-            msg += `- ${v.name}: ${selected[v.id]} kg\n`;
-        });
+        <h1 className="text-4xl font-bold text-green-700 mb-10">Retail Vegetable Order</h1>
 
-        return encodeURIComponent(msg);
-    };
-
-    return (
-        <main className="bg-[#f6faf7] min-h-screen text-gray-800">
-            <div className="max-w-6xl mx-auto px-6 py-16">
-                {/* Navigation Buttons */}
-                <div className="flex flex-wrap gap-4 mb-10">
-                    <a
-                        href="/"
-                        className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition"
-                    >
-                        Home
-                    </a>
-                    <a
-                        href="/wholesale"
-                        className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition"
-                    >
-                        Wholesale /25kg
-                    </a>
-                    <a
-                        href="/customer"
-                        className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition"
-                    >
-                        Customer /1kg
-                    </a>
+        {/* Vegetable List */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {vegetables.map((veg) => {
+            const qty = selected[veg.id] || 0;
+            const vegPrice = (veg.price * (qty / 10)).toFixed(2);
+            return (
+              <div key={veg.id} className="border border-green-100 rounded-2xl p-6 bg-white shadow hover:shadow-lg transition flex items-center gap-4">
+                <div className="w-24 h-24 flex-shrink-0 bg-green-50 rounded-lg overflow-hidden flex items-center justify-center">
+                  <img src={veg.img} alt={veg.name} className="object-contain h-full w-full" />
                 </div>
 
-                <h1 className="text-4xl font-bold text-green-700 mb-10">
-                    Retail Vegetable Order
-                </h1>
-
-                {/* Vegetable List */}
-                <div className="grid md:grid-cols-2 gap-6">
-                    {vegetables.map((veg) => (
-                        <div
-                            key={veg.id}
-                            className="border border-green-100 rounded-2xl p-6 bg-white shadow hover:shadow-lg transition flex items-center gap-4"
-                        >
-                            {/* Image */}
-                            <div className="w-24 h-24 flex-shrink-0 bg-green-50 rounded-lg overflow-hidden flex items-center justify-center">
-                                <img
-                                    src={veg.img}
-                                    alt={veg.name}
-                                    className="object-contain h-full w-full"
-                                />
-                            </div>
-
-                            {/* Text & Checkbox */}
-                            <div className="flex-1">
-                                <div className="flex justify-between items-center">
-                                    <div>
-                                        <h3 className="text-xl font-semibold">{veg.name}</h3>
-                                        <p className="text-gray-600">₹{veg.price} / 10kg</p>
-                                    </div>
-                                    <input
-                                        type="checkbox"
-                                        checked={!!selected[veg.id]}
-                                        onChange={() => toggleVeg(veg.id)}
-                                        className="w-5 h-5 accent-green-600"
-                                    />
-                                </div>
-
-                                {selected[veg.id] && (
-                                    <div className="mt-4">
-                                        <label className="text-sm text-gray-600">
-                                            Quantity (kg)
-                                        </label>
-                                        <select
-                                            value={selected[veg.id]}
-                                            onChange={(e) =>
-                                                updateQty(veg.id, Number(e.target.value))
-                                            }
-                                            className="block mt-1 border border-green-200 rounded-lg px-3 py-2 text-gray-800"
-                                        >
-                                            {[10, 20, 30, 40, 50].map((q) => (
-                                                <option key={q} value={q}>
-                                                    {q} kg
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Proceed Button */}
-                {selectedList.length > 0 && (
-                    <div className="mt-12">
-                        <button
-                            onClick={() => setShowModal(true)}
-                            className="bg-green-600 hover:bg-green-700 text-white px-10 py-4 rounded-lg font-semibold"
-                        >
-                            Proceed
-                        </button>
+                <div className="flex-1">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="text-xl font-semibold">{veg.name}</h3>
+                      <p className="text-gray-600">₹{veg.price} / 10kg</p>
                     </div>
-                )}
+                    <input type="checkbox" checked={!!selected[veg.id]} onChange={() => toggleVeg(veg.id)} className="w-5 h-5 accent-green-600" />
+                  </div>
+
+                  {selected[veg.id] && (
+                    <div className="mt-4">
+                      <label className="text-sm text-gray-600">Quantity (kg)</label>
+                      <input type="number" min={10} step={1} value={qty} onChange={(e) => updateQty(veg.id, Number(e.target.value))} className="block mt-1 w-28 border border-green-200 rounded-lg px-3 py-2 text-gray-800" />
+                      <p className="mt-1 text-gray-700 font-semibold">Price: ₹{vegPrice}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Proceed */}
+        {selectedList.length > 0 && (
+          <div className="mt-12">
+            <button onClick={() => setShowModal(true)} className="bg-green-600 hover:bg-green-700 text-white px-10 py-4 rounded-lg font-semibold">Proceed</button>
+          </div>
+        )}
+      </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-green-900/20 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white w-full max-w-lg rounded-2xl p-6 shadow-xl">
+            <h2 className="text-2xl font-bold mb-4 text-green-700">Confirm Your Order</h2>
+
+            {/* Selected Vegetables */}
+            <div className="mb-4 space-y-1">
+              {selectedList.map((v) => {
+                const qty = selected[v.id];
+                const vegPrice = (v.price * (qty / 10)).toFixed(2);
+                return <p key={v.id}>{v.name} – {qty} kg – ₹{vegPrice}</p>;
+              })}
             </div>
 
-            {/* Modal */}
-            {showModal && (
-                <div className="fixed inset-0 bg-green-900/20 backdrop-blur-sm flex items-center justify-center z-50">
-                    <div className="bg-white w-full max-w-lg rounded-2xl p-6 shadow-xl">
-                        <h2 className="text-2xl font-bold mb-4 text-green-700">
-                            Confirm Your Order
-                        </h2>
+            {/* Total */}
+            <div className="mt-4 font-bold text-lg">
+              Total to Pay: ₹{selectedList.reduce((sum, v) => sum + v.price * (selected[v.id] / 10), 0).toFixed(2)}
+            </div>
 
-                        {/* Selected Veg */}
-                        <div className="mb-4 space-y-1">
-                            {selectedList.map((v) => (
-                                <p key={v.id}>
-                                    {v.name} – {selected[v.id]} kg
-                                </p>
-                            ))}
-                        </div>
+            {/* Form */}
+            <div className="space-y-3 mt-4">
+              <input type="text" placeholder="Buyer Name" className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              <input type="tel" placeholder="Phone Number" className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+              <input type="email" placeholder="Email" className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+              <textarea placeholder="Delivery Address" className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
 
-                        {/* Form */}
-                        <div className="space-y-3">
-                            <input
-                                type="text"
-                                placeholder="Buyer Name"
-                                className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
-                                value={form.name}
-                                onChange={(e) =>
-                                    setForm({ ...form, name: e.target.value })
-                                }
-                            />
-                            <input
-                                type="tel"
-                                placeholder="Phone Number"
-                                className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
-                                value={form.phone}
-                                onChange={(e) =>
-                                    setForm({ ...form, phone: e.target.value })
-                                }
-                            />
-                            <input
-                                type="email"
-                                placeholder="Email"
-                                className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
-                                value={form.email}
-                                onChange={(e) =>
-                                    setForm({ ...form, email: e.target.value })
-                                }
-                            />
-                            <textarea
-                                placeholder="Delivery Address"
-                                className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
-                                value={form.address}
-                                onChange={(e) =>
-                                    setForm({ ...form, address: e.target.value })
-                                }
-                            />
-                        </div>
+              {/* Pincode */}
+              <input type="text" placeholder="Pincode" className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800" value={pincode} onChange={(e) => setPincode(e.target.value)} />
+              {pincodeError && <p className="text-red-600 font-semibold mt-1">{pincodeError}</p>}
+            </div>
 
-                        {/* Buttons */}
-                        <div className="flex justify-between mt-6">
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className="border border-green-300 px-5 py-2 rounded-lg"
-                            >
-                                Edit Vegetables
-                            </button>
-
-                            <a
-                                href={`https://wa.me/916206895209?text=${whatsappMessage()}`}
-                                target="_blank"
-                                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg"
-                            >
-                                Proceed to buy
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </main>
-    );
+            {/* Buttons */}
+            <div className="flex justify-between mt-6">
+              <button onClick={() => setShowModal(false)} className="border border-green-300 px-5 py-2 rounded-lg">Edit Vegetables</button>
+              <button onClick={handleProceed} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg">Proceed to buy</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </main>
+  );
 }
