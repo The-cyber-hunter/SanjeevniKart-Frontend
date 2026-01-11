@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { AlertTriangle } from "lucide-react";
 
 type Veg = {
     id: number;
@@ -52,264 +53,293 @@ const vegetables: Veg[] = [
 const allowedPincode = "821115";
 
 export default function SellingPage() {
-    const [selected, setSelected] = useState<Record<number, string>>({});
-    const [showModal, setShowModal] = useState(false);
-    const [form, setForm] = useState({
-        name: "",
-        phone: "",
-        email: "",
-        address: "",
-        pincode: "",
+  const [selected, setSelected] = useState<Record<number, string>>({});
+  const [showModal, setShowModal] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+    pincode: "",
+  });
+  const [formError, setFormError] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+    pincode: "",
+  });
+
+  /* ---------- Quantity Handling ---------- */
+  const toggleVeg = (id: number) => {
+    setSelected((prev) => {
+      const copy = { ...prev };
+      if (copy[id] === undefined) copy[id] = "1"; // default 1 kg
+      else delete copy[id];
+      return copy;
     });
-    const [pincodeError, setPincodeError] = useState("");
+  };
 
-    /* ---------------- Quantity Handling (UPDATED) ---------------- */
+  const updateQty = (id: number, value: string) => {
+    setSelected((prev) => ({ ...prev, [id]: value }));
+  };
 
-    const toggleVeg = (id: number) => {
-        setSelected((prev) => {
-            const copy = { ...prev };
-            if (copy[id]) delete copy[id];
-            else copy[id] = "5"; // default 5kg
-            return copy;
-        });
-    };
+  const validateQty = (id: number) => {
+    const num = parseFloat(selected[id] || "0");
+    if (isNaN(num) || num < 1) {
+      setSelected((prev) => ({ ...prev, [id]: "1" }));
+    }
+  };
 
-    const updateQty = (id: number, value: string) => {
-        if (value === "") {
-            setSelected((prev) => ({ ...prev, [id]: "" }));
-            return;
-        }
-        const num = parseFloat(value);
-        if (!isNaN(num)) {
-            setSelected((prev) => ({ ...prev, [id]: value }));
-        }
-    };
+  /* ---------- Delivery Charge ---------- */
+  const getDeliveryCharge = (qty: number) => {
+    if (qty < 5 && qty > 0) return 50;
+    if (qty < 20 && qty >= 5) return 30;
+    return 0;
+  };
 
-    const validateQty = (id: number) => {
-        const num = parseFloat(selected[id]);
-        if (isNaN(num) || num < 5) {
-            setSelected((prev) => ({ ...prev, [id]: "5" }));
-        }
-    };
+  const selectedList = vegetables.filter((v) => selected[v.id] !== undefined);
 
-    /* ------------------------------------------------------------- */
+  const getQty = (id: number) => parseFloat(selected[id] || "0");
 
-    const selectedList = vegetables.filter(
-        (v) => selected[v.id] && selected[v.id] !== ""
-    );
+  const getVegPrice = (v: Veg) => {
+    const qty = getQty(v.id);
+    const delivery = getDeliveryCharge(qty);
+    return v.price * qty + delivery;
+  };
 
-    const whatsappMessage = () => {
-        let msg = `Selling Order - Sanjeevni Kart\n\nFarmer Name: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\nPickup Address: ${form.address}\n\nVegetables:\n`;
-        selectedList.forEach((v) => {
-            const qty = parseFloat(selected[v.id]);
-            msg += `- ${v.name}: ${qty} kg – ₹${(v.price * qty).toFixed(2)}\n`;
-        });
-        const total = selectedList
-            .reduce((sum, v) => sum + v.price * parseFloat(selected[v.id]), 0)
-            .toFixed(2);
-        msg += `\nTotal Expected Payment: ₹${total}`;
-        return encodeURIComponent(msg);
-    };
+  const totalPrice = selectedList.reduce(
+    (sum, v) => sum + getVegPrice(v),
+    0
+  );
 
-    const handleProceed = () => {
-        if (form.pincode !== allowedPincode) {
-            setPincodeError("Sorry! No Pickup available to this pincode location.");
-            return;
-        }
-        setPincodeError("");
-        window.open(
-            `https://wa.me/916206895209?text=${whatsappMessage()}`,
-            "_blank"
-        );
-    };
+  /* ---------- WhatsApp Message ---------- */
+  const whatsappMessage = () => {
+    let msg = `Selling Order - Sanjeevni Kart\n\nFarmer Name: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\nPickup Address: ${form.address}\nPincode: ${form.pincode}\n\nVegetables:\n`;
+    selectedList.forEach((v) => {
+      const qty = getQty(v.id);
+      const price = getVegPrice(v).toFixed(2);
+      msg += `- ${v.name}: ${qty} kg – ₹${price}\n`;
+    });
+    msg += `\nTotal Expected Payment: ₹${totalPrice.toFixed(2)}`;
+    return encodeURIComponent(msg);
+  };
 
-    return (
-        <main className="bg-[#f6faf7] min-h-screen text-gray-800">
-            <div className="max-w-6xl mx-auto px-6 py-16">
-                <div className="flex justify-start mb-8">
-                    <a
-                        href="/"
-                        className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition"
-                    >
-                        Back to the Home page!
-                    </a>
-                </div>
+  /* ---------- Form Validation ---------- */
+  const handleProceed = () => {
+    let hasError = false;
+    const errors = { name: "", phone: "", email: "", address: "", pincode: "" };
 
-                <h1 className="text-4xl font-bold text-green-700 mb-6 text-center">
-                    Sell your vegetables!
-                </h1>
+    if (!form.name) {
+      errors.name = "Farmer name is required";
+      hasError = true;
+    }
+    if (!form.phone) {
+      errors.phone = "Phone number is required";
+      hasError = true;
+    }
+    if (!form.email) {
+      errors.email = "Email is required";
+      hasError = true;
+    }
+    if (!form.address) {
+      errors.address = "Pickup address is required";
+      hasError = true;
+    }
+    if (!form.pincode) {
+      errors.pincode = "Pincode is required";
+      hasError = true;
+    } else if (form.pincode !== allowedPincode) {
+      errors.pincode = "No pickups are available to this pincode location.";
+      hasError = true;
+    }
 
-                {/* Vegetable List */}
-                <div className="grid md:grid-cols-2 gap-6">
-                    {vegetables.map((veg) => {
-                        const qty =
-                            selected[veg.id] === "" || !selected[veg.id]
-                                ? 0
-                                : parseFloat(selected[veg.id]);
+    setFormError(errors);
 
-                        return (
-                            <div
-                                key={veg.id}
-                                className="border border-green-100 rounded-2xl p-6 bg-white shadow flex gap-4"
-                            >
-                                <img
-                                    src={veg.img}
-                                    alt={veg.name}
-                                    className="w-24 h-24 object-contain"
-                                />
+    if (hasError) return;
 
-                                <div className="flex-1">
-                                    <div className="flex justify-between items-center">
-                                        <div>
-                                            <h3 className="text-xl font-semibold">{veg.name}</h3>
-                                            <p className="text-gray-600">₹{veg.price} / kg</p>
-                                        </div>
-                                        <input
-                                            type="checkbox"
-                                            checked={!!selected[veg.id]}
-                                            onChange={() => toggleVeg(veg.id)}
-                                            className="w-5 h-5 accent-green-600"
-                                        />
-                                    </div>
+    window.open(`https://wa.me/916206895209?text=${whatsappMessage()}`, "_blank");
+  };
 
-                                    {selected[veg.id] && (
-                                        <div className="mt-4">
-                                            <label className="text-sm text-gray-600">
-                                                Quantity (kg)
-                                            </label>
-                                            <input
-                                                type="number"
-                                                min={5}
-                                                step={1}
-                                                value={selected[veg.id]}
-                                                onChange={(e) =>
-                                                    updateQty(veg.id, e.target.value)
-                                                }
-                                                onBlur={() => validateQty(veg.id)}
-                                                className="block mt-1 w-28 border border-green-200 rounded-lg px-3 py-2"
-                                            />
-                                            <p className="mt-1 font-semibold">
-                                                Expected Payment: ₹{(veg.price * qty).toFixed(2)}
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
+  return (
+    <main className="bg-[#f6faf7] min-h-screen text-gray-800">
+      <div className="max-w-6xl mx-auto px-6 py-16">
+        <div className="flex justify-start mb-8">
+          <a
+            href="/"
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition"
+          >
+            Back to Home!
+          </a>
+        </div>
 
-                {selectedList.length > 0 && (
-                    <div className="mt-12 text-center">
-                        <button
-                            onClick={() => setShowModal(true)}
-                            className="bg-green-600 hover:bg-green-700 text-white px-10 py-4 rounded-lg font-semibold"
-                        >
-                            Proceed
-                        </button>
+        <h1 className="text-4xl font-bold text-green-700 mb-6 text-center">
+          Sell Your Vegetables
+        </h1>
+
+        {/* Vegetable List */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {vegetables.map((veg) => {
+            const qty = getQty(veg.id);
+            const vegPrice = (veg.price * qty).toFixed(2);
+            const delivery = getDeliveryCharge(qty);
+
+            return (
+              <div key={veg.id} className="border border-green-100 rounded-2xl p-6 bg-white shadow flex gap-4">
+                <img src={veg.img} alt={veg.name} className="w-24 h-24 object-contain" />
+
+                <div className="flex-1">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="text-xl font-semibold">{veg.name}</h3>
+                      <p className="text-gray-600">₹{veg.price} / kg</p>
                     </div>
-                )}
+                    <input
+                      type="checkbox"
+                      checked={selected[veg.id] !== undefined}
+                      onChange={() => toggleVeg(veg.id)}
+                      className="w-5 h-5 accent-green-600"
+                    />
+                  </div>
+
+                  {selected[veg.id] !== undefined && (
+                    <div className="mt-4">
+                      <label className="text-sm text-gray-600">Quantity (kg)</label>
+                      <input
+                        type="number"
+                        min={1}
+                        step={1}
+                        value={selected[veg.id]}
+                        onChange={(e) => updateQty(veg.id, e.target.value)}
+                        onBlur={() => validateQty(veg.id)}
+                        className="block mt-1 w-28 border border-green-200 rounded-lg px-3 py-2"
+                      />
+                      <p className="mt-2 font-semibold flex items-center gap-2">
+                        Price: ₹{vegPrice}
+                        {delivery > 0 && (
+                          <span className="text-red-600 font-bold flex items-center gap-1">
+                            <AlertTriangle size={16} /> + ₹{delivery} Delivery
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Proceed Button */}
+        {selectedList.length > 0 && (
+          <div className="mt-12 text-center">
+            <button
+              onClick={() => setShowModal(true)}
+              className="bg-green-600 hover:bg-green-700 text-white px-10 py-4 rounded-lg font-semibold"
+            >
+              Proceed
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-green-900/20 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white w-full max-w-lg rounded-2xl p-6 shadow-xl">
+            <h2 className="text-2xl font-bold mb-4 text-green-700">Confirm Your Selling Order</h2>
+
+            <div className="mb-4 space-y-1">
+              {selectedList.map((v) => {
+                const qty = getQty(v.id);
+                const delivery = getDeliveryCharge(qty);
+                return (
+                  <p key={v.id}>
+                    {v.name} – {qty} kg – ₹{(v.price * qty).toFixed(2)}
+                    {delivery > 0 && (
+                      <span className="text-red-600 font-bold ml-2 animate-pulse">
+                        + ₹{delivery} Delivery
+                      </span>
+                    )}
+                  </p>
+                );
+              })}
             </div>
 
-            {/* ---------------- Modal (FORM RESTORED) ---------------- */}
-            {showModal && (
-                <div className="fixed inset-0 bg-green-900/20 backdrop-blur-sm flex items-center justify-center z-50">
-                    <div className="bg-white w-full max-w-lg rounded-2xl p-6 shadow-xl">
-                        <h2 className="text-2xl font-bold mb-4 text-green-700">
-                            Confirm Your Selling Order
-                        </h2>
+            <div className="mt-4 font-bold text-lg">
+              Total Expected Payment: ₹{totalPrice.toFixed(2)}
+            </div>
 
-                        {/* Selected Veg */}
-                        <div className="mb-4 space-y-1">
-                            {selectedList.map((v) => (
-                                <p key={v.id}>
-                                    {v.name} – {selected[v.id]} kg – ₹
-                                    {(v.price * parseFloat(selected[v.id])).toFixed(2)}
-                                </p>
-                            ))}
-                        </div>
+            <div className="space-y-3 mt-4">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Farmer Name"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                />
+                {formError.name && <p className="text-red-600 text-sm mt-1">{formError.name}</p>}
+              </div>
 
-                        <div className="mt-4 font-bold text-lg">
-                            Total Expected Payment: ₹
-                            {selectedList
-                                .reduce(
-                                    (sum, v) =>
-                                        sum + v.price * parseFloat(selected[v.id]),
-                                    0
-                                )
-                                .toFixed(2)}
-                        </div>
+              <div>
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                />
+                {formError.phone && <p className="text-red-600 text-sm mt-1">{formError.phone}</p>}
+              </div>
 
-                        {/* Farmer Form */}
-                        <div className="space-y-3 mt-4">
-                            <input
-                                type="text"
-                                placeholder="Farmer Name"
-                                className="w-full border border-green-200 px-3 py-2 rounded-lg"
-                                value={form.name}
-                                onChange={(e) =>
-                                    setForm({ ...form, name: e.target.value })
-                                }
-                            />
-                            <input
-                                type="tel"
-                                placeholder="Phone Number"
-                                className="w-full border border-green-200 px-3 py-2 rounded-lg"
-                                value={form.phone}
-                                onChange={(e) =>
-                                    setForm({ ...form, phone: e.target.value })
-                                }
-                            />
-                            <input
-                                type="email"
-                                placeholder="Email"
-                                className="w-full border border-green-200 px-3 py-2 rounded-lg"
-                                value={form.email}
-                                onChange={(e) =>
-                                    setForm({ ...form, email: e.target.value })
-                                }
-                            />
-                            <textarea
-                                placeholder="Pickup Address"
-                                className="w-full border border-green-200 px-3 py-2 rounded-lg"
-                                value={form.address}
-                                onChange={(e) =>
-                                    setForm({ ...form, address: e.target.value })
-                                }
-                            />
-                            <input
-                                type="text"
-                                placeholder="Pincode"
-                                className="w-full border border-green-200 px-3 py-2 rounded-lg"
-                                value={form.pincode}
-                                onChange={(e) =>
-                                    setForm({ ...form, pincode: e.target.value })
-                                }
-                            />
-                            {pincodeError && (
-                                <p className="text-red-600 font-semibold">
-                                    {pincodeError}
-                                </p>
-                            )}
-                        </div>
+              <div>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                />
+                {formError.email && <p className="text-red-600 text-sm mt-1">{formError.email}</p>}
+              </div>
 
-                        <div className="flex justify-between mt-6">
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className="border border-green-300 px-5 py-2 rounded-lg"
-                            >
-                                Edit Vegetables
-                            </button>
-                            <button
-                                onClick={handleProceed}
-                                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg"
-                            >
-                                Proceed To Sell
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </main>
-    );
+              <div>
+                <textarea
+                  placeholder="Pickup Address"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg"
+                  value={form.address}
+                  onChange={(e) => setForm({ ...form, address: e.target.value })}
+                />
+                {formError.address && <p className="text-red-600 text-sm mt-1">{formError.address}</p>}
+              </div>
+
+              <div>
+                <input
+                  type="text"
+                  placeholder="Pincode"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg"
+                  value={form.pincode}
+                  onChange={(e) => setForm({ ...form, pincode: e.target.value })}
+                />
+                {formError.pincode && <p className="text-red-600 text-sm mt-1">{formError.pincode}</p>}
+              </div>
+            </div>
+
+            <div className="flex justify-between mt-6">
+              <button onClick={() => setShowModal(false)} className="border border-green-300 px-5 py-2 rounded-lg">
+                Edit Vegetables
+              </button>
+              <button
+                onClick={handleProceed}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg"
+              >
+                Proceed to Sell
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </main>
+  );
 }

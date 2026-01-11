@@ -50,10 +50,9 @@ const vegetables: Veg[] = [
 ];
 
 export default function RetailPage() {
-  const [selected, setSelected] = useState<Record<number, string>>({});
+  const [selected, setSelected] = useState<Record<number, string | undefined>>({});
   const [showModal, setShowModal] = useState(false);
   const [pincode, setPincode] = useState("");
-  const [pincodeError, setPincodeError] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -62,37 +61,50 @@ export default function RetailPage() {
     address: "",
   });
 
+  const [formError, setFormError] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+    pincode: "",
+  });
+
+
+
   const toggleVeg = (id: number) => {
-    setSelected((prev) => {
-      const copy = { ...prev };
-      if (copy[id]) delete copy[id];
-      else copy[id] = "10"; // default 10kg
-      return copy;
-    });
+    setSelected((prev) => ({
+      ...prev,
+      [id]: prev[id] === undefined ? "10" : undefined,
+    }));
   };
 
   const updateQty = (id: number, value: string) => {
-    // allow empty string for deleting
     if (value === "") {
       setSelected((prev) => ({ ...prev, [id]: "" }));
       return;
     }
 
-    // only allow numbers
-    const num = parseInt(value, 10);
-    if (!isNaN(num)) {
+    if (/^\d+$/.test(value)) {
       setSelected((prev) => ({ ...prev, [id]: value }));
     }
   };
 
   const validateQty = (id: number) => {
-    const num = parseInt(selected[id], 10);
+    const num = parseInt(selected[id] ?? "", 10);
     if (isNaN(num) || num < 10) {
       setSelected((prev) => ({ ...prev, [id]: "10" }));
     }
   };
 
-  const selectedList = vegetables.filter((v) => selected[v.id]);
+  const selectedList = vegetables.filter(
+    (v) => selected[v.id] !== null && selected[v.id] !== undefined
+  );
+
+  const totalPrice = selectedList.reduce((sum, v) => {
+  const qty = Number(selected[v.id] || 0); 
+  const vegPrice = +(v.price * (qty / 10)).toFixed(2); 
+  return sum + vegPrice;
+}, 0);
 
   const whatsappMessage = () => {
     let msg = `Retail Order - Sanjeevni Kart\n\n`;
@@ -104,27 +116,55 @@ export default function RetailPage() {
     msg += `Vegetables:\n`;
 
     selectedList.forEach((v) => {
-      const qty = parseInt(selected[v.id], 10);
+      const qty = parseInt(selected[v.id] || "0", 10);
       const price = (v.price * (qty / 10)).toFixed(2);
       msg += `- ${v.name}: ${qty} kg – ₹${price}\n`;
     });
-
-    const total = selectedList
-      .reduce((sum, v) => sum + v.price * (parseInt(selected[v.id], 10) / 10), 0)
-      .toFixed(2);
-
-    msg += `\nTotal to Pay: ₹${total}`;
+    msg += `\nTotal to Pay: ₹${totalPrice.toFixed(2)}`;
     return encodeURIComponent(msg);
   };
 
   const handleProceed = () => {
-    if (pincode !== "821115") {
-      setPincodeError("No deliveries are available to this pincode location.");
-      return;
+    let hasError = false;
+    const newErrors = { name: "", phone: "", email: "", address: "", pincode: "" };
+
+    if (!form.name) {
+      newErrors.name = "Buyer name is required";
+      hasError = true;
     }
-    setPincodeError("");
+
+    if (!form.phone) {
+      newErrors.phone = "Phone number is required";
+      hasError = true;
+    }
+
+    if (!form.email) {
+      newErrors.email = "Email is required";
+      hasError = true;
+    }
+
+    if (!form.address) {
+      newErrors.address = "Delivery address is required";
+      hasError = true;
+    }
+
+    if (!pincode) {
+      newErrors.pincode = "Pincode is required";
+      hasError = true;
+    } else if (pincode !== "821115") {
+      newErrors.pincode = "No deliveries are available to this pincode location.";
+      hasError = true;
+    }
+
+    setFormError(newErrors);
+
+    if (hasError) return; // Stop if any error
+
+    // If everything is fine, proceed to WhatsApp
     window.open(`https://wa.me/916206895209?text=${whatsappMessage()}`, "_blank");
   };
+
+
 
   return (
     <main className="bg-[#f6faf7] min-h-screen text-gray-800">
@@ -146,6 +186,7 @@ export default function RetailPage() {
             const vegPrice = (veg.price * (numQty / 10)).toFixed(2);
             const showError = qty !== "" && parseInt(qty, 10) < 10;
 
+
             return (
               <div key={veg.id} className="border border-green-100 rounded-2xl p-6 bg-white shadow hover:shadow-lg transition flex items-center gap-4">
                 <div className="w-24 h-24 flex-shrink-0 bg-green-50 rounded-lg overflow-hidden flex items-center justify-center">
@@ -158,21 +199,32 @@ export default function RetailPage() {
                       <h3 className="text-xl font-semibold">{veg.name}</h3>
                       <p className="text-gray-600">₹{veg.price} / 10kg</p>
                     </div>
-                    <input type="checkbox" checked={!!selected[veg.id]} onChange={() => toggleVeg(veg.id)} className="w-5 h-5 accent-green-600" />
+                    <input
+                      type="checkbox"
+                      checked={selected[veg.id] !== null && selected[veg.id] !== undefined}
+                      onChange={() => toggleVeg(veg.id)}
+                      className="w-5 h-5 accent-green-600"
+                    />
                   </div>
 
-                  {selected[veg.id] && (
+                  {selected[veg.id] !== null && selected[veg.id] !== undefined && (
                     <div className="mt-4">
                       <label className="text-sm text-gray-600">Quantity (kg) [min 10]</label>
                       <input
                         type="number"
                         value={qty}
+                        min={10}
                         onChange={(e) => updateQty(veg.id, e.target.value)}
                         onBlur={() => validateQty(veg.id)}
-                        className={`block mt-1 w-28 border rounded-lg px-3 py-2 text-gray-800 ${showError ? "border-red-600" : "border-green-200"}`}
+                        className={`block mt-1 w-28 border rounded-lg px-3 py-2 text-gray-800 ${showError ? "border-red-600" : "border-green-200"
+                          }`}
                       />
                       {showError && <p className="text-red-600 text-sm mt-1">Quantity must be at least 10 kg</p>}
-                      {!showError && qty !== "" && <p className="mt-1 text-gray-700 font-semibold">Price: ₹{vegPrice}</p>}
+                      {!showError && qty !== "" && (
+                        <p className="mt-1 text-gray-700 font-semibold">
+                          Price: ₹{vegPrice}
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
@@ -198,27 +250,70 @@ export default function RetailPage() {
             {/* Selected Vegetables */}
             <div className="mb-4 space-y-1">
               {selectedList.map((v) => {
-                const qty = parseInt(selected[v.id], 10);
+                const qty = parseInt(selected[v.id] ?? "0", 10);
                 const vegPrice = (v.price * (qty / 10)).toFixed(2);
                 return <p key={v.id}>{v.name} – {qty} kg – ₹{vegPrice}</p>;
               })}
             </div>
 
             {/* Total */}
-            <div className="mt-4 font-bold text-lg">
-              Total to Pay: ₹{selectedList.reduce((sum, v) => sum + v.price * (parseInt(selected[v.id], 10) / 10), 0).toFixed(2)}
-            </div>
+            <div className="mt-4 font-bold text-lg">Total to Pay: ₹{totalPrice.toFixed(2)}</div>
 
             {/* Form */}
             <div className="space-y-3 mt-4">
-              <input type="text" placeholder="Buyer Name" className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-              <input type="tel" placeholder="Phone Number" className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-              <input type="email" placeholder="Email" className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-              <textarea placeholder="Delivery Address" className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+              <div>
+                <input
+                  type="text"
+                  placeholder="Buyer Name"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                />
+                {formError.name && <p className="text-red-600 text-sm mt-1">{formError.name}</p>}
+              </div>
 
-              {/* Pincode */}
-              <input type="text" placeholder="Pincode" className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800" value={pincode} onChange={(e) => setPincode(e.target.value)} />
-              {pincodeError && <p className="text-red-600 font-semibold mt-1">{pincodeError}</p>}
+              <div>
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                />
+                {formError.phone && <p className="text-red-600 text-sm mt-1">{formError.phone}</p>}
+              </div>
+
+              <div>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                />
+                {formError.email && <p className="text-red-600 text-sm mt-1">{formError.email}</p>}
+              </div>
+
+              <div>
+                <textarea
+                  placeholder="Delivery Address"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
+                  value={form.address}
+                  onChange={(e) => setForm({ ...form, address: e.target.value })}
+                />
+                {formError.address && <p className="text-red-600 text-sm mt-1">{formError.address}</p>}
+              </div>
+
+              <div>
+                <input
+                  type="text"
+                  placeholder="Pincode"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
+                  value={pincode}
+                  onChange={(e) => setPincode(e.target.value)}
+                />
+                {formError.pincode && <p className="text-red-600 text-sm mt-1">{formError.pincode}</p>}
+              </div>
             </div>
 
             {/* Buttons */}

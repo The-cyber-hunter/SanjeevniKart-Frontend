@@ -19,6 +19,35 @@ const vegetables: Veg[] = [
   { id: 6, name: "Kale (काले)", price: 23, img: "/images/vegetables/kale.jpg" },
   { id: 7, name: "Coriander (धनिया)", price: 20, img: "/images/vegetables/coriander.jpg" },
   { id: 8, name: "Mint (पुदीना)", price: 21, img: "/images/vegetables/mint.jpg" },
+  { id: 9, name: "Potato (आलू)", price: 22, img: "/images/vegetables/potato.jpg" },
+  { id: 10, name: "Sweet Potato (शकरकंद)", price: 24, img: "/images/vegetables/sweet_potato.jpg" },
+  { id: 11, name: "Carrot (गाजर)", price: 23, img: "/images/vegetables/carrot.jpg" },
+  { id: 12, name: "Beetroot (चुकंदर)", price: 22, img: "/images/vegetables/beetroot.jpg" },
+  { id: 13, name: "Radish (मूली)", price: 21, img: "/images/vegetables/radish.jpg" },
+  { id: 14, name: "Turnip (शलगम)", price: 22, img: "/images/vegetables/turnip.jpg" },
+  { id: 15, name: "Yam (रतालू / जिमीकंद)", price: 25, img: "/images/vegetables/yam.jpg" },
+  { id: 16, name: "Tomato (टमाटर)", price: 23, img: "/images/vegetables/tomato.jpg" },
+  { id: 17, name: "Capsicum (शिमला मिर्च)", price: 25, img: "/images/vegetables/capsicum.jpg" },
+  { id: 18, name: "Brinjal (बैंगन)", price: 22, img: "/images/vegetables/brinjal.jpg" },
+  { id: 19, name: "Cucumber (खीरा)", price: 22, img: "/images/vegetables/cucumber.jpg" },
+  { id: 20, name: "Pumpkin (कद्दू)", price: 23, img: "/images/vegetables/pumpkin.jpg" },
+  { id: 21, name: "Bottle Gourd (लौकी / दुधी)", price: 22, img: "/images/vegetables/bottle_gourd.jpg" },
+  { id: 22, name: "Ridge Gourd (तुरई / तुरिया)", price: 23, img: "/images/vegetables/ridge_gourd.jpg" },
+  { id: 23, name: "Bitter Gourd (करेला)", price: 24, img: "/images/vegetables/bitter_gourd.jpg" },
+  { id: 24, name: "Snake Gourd (चिचिंडा / पडल)", price: 23, img: "/images/vegetables/snake_gourd.jpg" },
+  { id: 25, name: "Zucchini (जुचिनी)", price: 25, img: "/images/vegetables/zucchini.jpg" },
+  { id: 27, name: "Cluster Beans (गवार / गवार)", price: 23, img: "/images/vegetables/cluster_beans.jpg" },
+  { id: 29, name: "Peas (मटर)", price: 22, img: "/images/vegetables/peas.jpg" },
+  { id: 30, name: "Broad Beans (सेम / पापड़ी)", price: 24, img: "/images/vegetables/broad_beans.jpg" },
+  { id: 31, name: "Cowpeas (लोबिया)", price: 22, img: "/images/vegetables/cowpeas.jpg" },
+  { id: 32, name: "Cauliflower (फूलगोभी)", price: 24, img: "/images/vegetables/cauliflower.jpg" },
+  { id: 33, name: "Broccoli (ब्रोकोली)", price: 25, img: "/images/vegetables/broccoli.jpg" },
+  { id: 34, name: "Mushrooms (खुम्बी)", price: 25, img: "/images/vegetables/mushroom.jpg" },
+  { id: 35, name: "Drumstick (सहजन / मोरिंगा)", price: 22, img: "/images/vegetables/drumstick.jpg" },
+  { id: 36, name: "Okra / Ladyfinger (भिंडी)", price: 22, img: "/images/vegetables/okra.jpg" },
+  { id: 37, name: "Ginger (अदरक)", price: 25, img: "/images/vegetables/ginger.jpg" },
+  { id: 38, name: "Green Chili (हरी मिर्च)", price: 25, img: "/images/vegetables/green_chili.jpg" },
+  { id: 39, name: "Garlic (लहसुन)", price: 25, img: "/images/vegetables/garlic.jpg" },
 ];
 
 export default function CustomerPage() {
@@ -26,52 +55,47 @@ export default function CustomerPage() {
   const [showModal, setShowModal] = useState(false);
   const [pincode, setPincode] = useState("");
   const [pincodeError, setPincodeError] = useState("");
-
   const [form, setForm] = useState({
     name: "",
     phone: "",
     email: "",
     address: "",
   });
+  const [formError, setFormError] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+    pincode: "",
+  });
 
-  /* ---------- Quantity Logic (Retail-style) ---------- */
-
+  /* ---------- Quantity Logic ---------- */
   const toggleVeg = (id: number) => {
-    setSelected((prev) => {
+    setSelected((prev: Record<number, string>) => {
       const copy = { ...prev };
       if (copy[id]) delete copy[id];
-      else copy[id] = "0.5"; // default 0.5 kg
+      else copy[id] = "0.5"; // default 0.5kg
       return copy;
     });
   };
 
   const updateQty = (id: number, value: string) => {
-    if (value === "") {
-      setSelected((prev) => ({ ...prev, [id]: "" }));
-      return;
-    }
-
-    const num = parseFloat(value);
-    if (!isNaN(num)) {
-      setSelected((prev) => ({ ...prev, [id]: value }));
-    }
+    setSelected((prev: Record<number, string>) => ({ ...prev, [id]: value }));
   };
 
   const validateQty = (id: number) => {
-    const num = parseFloat(selected[id]);
+    const num = parseFloat(selected[id] || "0");
     if (isNaN(num) || num < 0.5) {
-      setSelected((prev) => ({ ...prev, [id]: "0.5" }));
+      setSelected((prev: Record<number, string>) => ({ ...prev, [id]: "0.5" }));
     }
   };
 
   /* ---------- Helpers ---------- */
-
   const selectedList = vegetables.filter(
-    (v) => selected[v.id] && selected[v.id] !== ""
+    (v) => selected[v.id] !== undefined
   );
 
-  const getQty = (id: number) =>
-    selected[id] ? parseFloat(selected[id]) : 0;
+  const getQty = (id: number) => parseFloat(selected[id] || "0");
 
   const getVegPrice = (v: Veg) => {
     const qty = getQty(v.id);
@@ -92,33 +116,59 @@ export default function CustomerPage() {
     msg += `Address: ${form.address}\n`;
     msg += `Pincode: ${pincode}\n\n`;
     msg += `Vegetables:\n`;
-
     selectedList.forEach((v) => {
       const qty = getQty(v.id);
       const price = getVegPrice(v).toFixed(2);
       msg += `- ${v.name}: ${qty} kg – ₹${price}\n`;
     });
-
     msg += `\nTotal to Pay: ₹${totalPrice.toFixed(2)}`;
     return encodeURIComponent(msg);
   };
 
   const handleProceed = () => {
-    if (pincode !== "821115") {
-      setPincodeError("No deliveries are available to this pincode location.");
-      return;
+    let hasError = false;
+    const newErrors = { name: "", phone: "", email: "", address: "", pincode: "" };
+
+    if (!form.name) {
+      newErrors.name = "Buyer name is required";
+      hasError = true;
     }
-    setPincodeError("");
-    window.open(
-      `https://wa.me/916206895209?text=${whatsappMessage()}`,
-      "_blank"
-    );
+
+    if (!form.phone) {
+      newErrors.phone = "Phone number is required";
+      hasError = true;
+    }
+
+    if (!form.email) {
+      newErrors.email = "Email is required";
+      hasError = true;
+    }
+
+    if (!form.address) {
+      newErrors.address = "Delivery address is required";
+      hasError = true;
+    }
+
+    if (!pincode) {
+      newErrors.pincode = "Pincode is required";
+      hasError = true;
+    } else if (pincode !== "821115") {
+      newErrors.pincode = "No deliveries are available to this pincode location.";
+      hasError = true;
+    }
+
+    setFormError(newErrors);
+
+    if (hasError) return; // Stop if any error
+
+    // If everything is fine, proceed to WhatsApp
+    window.open(`https://wa.me/916206895209?text=${whatsappMessage()}`, "_blank");
   };
+
 
   return (
     <main className="bg-[#f6faf7] min-h-screen text-gray-800">
       <div className="max-w-6xl mx-auto px-6 py-16">
-
         {/* Navigation */}
         <div className="flex flex-wrap gap-4 mb-10">
           <a href="/" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">Home</a>
@@ -126,9 +176,7 @@ export default function CustomerPage() {
           <a href="/retail" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">Retail /10kg</a>
         </div>
 
-        <h1 className="text-4xl font-bold text-green-700 mb-10">
-          Customer Vegetable Order
-        </h1>
+        <h1 className="text-4xl font-bold text-green-700 mb-10">Customer Vegetable Order</h1>
 
         {/* Vegetable List */}
         <div className="grid md:grid-cols-2 gap-6">
@@ -142,7 +190,6 @@ export default function CustomerPage() {
                 <div className="w-24 h-24 bg-green-50 rounded-lg overflow-hidden flex items-center justify-center">
                   <img src={veg.img} alt={veg.name} className="object-contain h-full w-full" />
                 </div>
-
                 <div className="flex-1">
                   <div className="flex justify-between items-center">
                     <div>
@@ -151,13 +198,13 @@ export default function CustomerPage() {
                     </div>
                     <input
                       type="checkbox"
-                      checked={!!selected[veg.id]}
+                      checked={selected[veg.id] !== undefined}
                       onChange={() => toggleVeg(veg.id)}
                       className="w-5 h-5 accent-green-600"
                     />
                   </div>
 
-                  {selected[veg.id] && (
+                  {selected[veg.id] !== undefined && (
                     <div className="mt-4">
                       <label className="text-sm text-gray-600">Quantity (kg)</label>
                       <input
@@ -169,7 +216,6 @@ export default function CustomerPage() {
                         onBlur={() => validateQty(veg.id)}
                         className="block mt-1 w-28 border border-green-200 rounded-lg px-3 py-2 text-gray-800"
                       />
-
                       <p className="mt-2 text-gray-800 font-semibold flex items-center gap-2">
                         Price: ₹{vegPrice}
                         {qty < 3 && qty > 0 && (
@@ -203,9 +249,7 @@ export default function CustomerPage() {
       {showModal && (
         <div className="fixed inset-0 bg-green-900/20 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white w-full max-w-lg rounded-2xl p-6 shadow-xl">
-            <h2 className="text-2xl font-bold mb-4 text-green-700">
-              Confirm Your Order
-            </h2>
+            <h2 className="text-2xl font-bold mb-4 text-green-700">Confirm Your Order</h2>
 
             <div className="mb-4 space-y-1">
               {selectedList.map((v) => {
@@ -230,35 +274,64 @@ export default function CustomerPage() {
             </div>
 
             <div className="space-y-3 mt-4">
-              <input type="text" placeholder="Buyer Name" className="w-full border border-green-200 px-3 py-2 rounded-lg" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-              <input type="tel" placeholder="Phone Number" className="w-full border border-green-200 px-3 py-2 rounded-lg" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-              <input type="email" placeholder="Email" className="w-full border border-green-200 px-3 py-2 rounded-lg" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-              <textarea placeholder="Delivery Address" className="w-full border border-green-200 px-3 py-2 rounded-lg" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+              <div>
+                <input
+                  type="text"
+                  placeholder="Buyer Name"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                />
+                {formError.name && <p className="text-red-600 text-sm mt-1">{formError.name}</p>}
+              </div>
 
-              <input
-                type="text"
-                placeholder="Pincode"
-                className="w-full border border-green-200 px-3 py-2 rounded-lg"
-                value={pincode}
-                onChange={(e) => setPincode(e.target.value)}
-              />
-              {pincodeError && (
-                <p className="text-red-600 font-semibold mt-1">
-                  {pincodeError}
-                </p>
-              )}
+              <div>
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                />
+                {formError.phone && <p className="text-red-600 text-sm mt-1">{formError.phone}</p>}
+              </div>
+
+              <div>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                />
+                {formError.email && <p className="text-red-600 text-sm mt-1">{formError.email}</p>}
+              </div>
+
+              <div>
+                <textarea
+                  placeholder="Delivery Address"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
+                  value={form.address}
+                  onChange={(e) => setForm({ ...form, address: e.target.value })}
+                />
+                {formError.address && <p className="text-red-600 text-sm mt-1">{formError.address}</p>}
+              </div>
+
+              <div>
+                <input
+                  type="text"
+                  placeholder="Pincode"
+                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
+                  value={pincode}
+                  onChange={(e) => setPincode(e.target.value)}
+                />
+                {formError.pincode && <p className="text-red-600 text-sm mt-1">{formError.pincode}</p>}
+              </div>
             </div>
 
             <div className="flex justify-between mt-6">
-              <button onClick={() => setShowModal(false)} className="border border-green-300 px-5 py-2 rounded-lg">
-                Edit Vegetables
-              </button>
-              <button
-                onClick={handleProceed}
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg"
-              >
-                Proceed to buy
-              </button>
+              <button onClick={() => setShowModal(false)} className="border border-green-300 px-5 py-2 rounded-lg">Edit Vegetables</button>
+              <button onClick={handleProceed} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg">Proceed to buy</button>
             </div>
           </div>
         </div>
