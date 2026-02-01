@@ -1,14 +1,14 @@
-import { NextResponse } from "next/server";
+// app/robots.ts
+import type { MetadataRoute } from "next";
 
-export const GET = () => {
-  const robotsTxt = `
-User-agent: *
-Allow: /
-
-Sitemap: https://www.sanjeevnikart.in/sitemap.xml
-  `.trim();
-
-  return new NextResponse(robotsTxt, {
-    headers: { "Content-Type": "text/plain" },
-  });
+export const GET = (): MetadataRoute.Robots => {
+  return {
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+      },
+    ],
+    sitemap: "https://www.sanjeevnikart.in/sitemap.xml",
+  };
 };
