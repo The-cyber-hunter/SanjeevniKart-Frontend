@@ -11,6 +11,7 @@ export default function PrivacyPolicyPage() {
           name="description"
           content="Learn how Sanjeevni Kart collects, stores, and protects your personal information when using our services."
         />
+        <link rel="canonical" href="https://www.sanjeevnikart.in/privacy-policy" />
       </Head>
 
       <main className="min-h-screen w-full bg-[#2B2024] text-white font-sans flex justify-center px-6 py-20">

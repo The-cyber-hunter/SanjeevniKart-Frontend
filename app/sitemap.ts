@@ -1,34 +1,55 @@
-import { NextResponse } from "next/server";
+import type { MetadataRoute } from "next";
 
-export const GET = async () => {
-    const baseUrl = "https://www.sanjeevnikart.in";
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = "https://www.sanjeevnikart.in"; 
 
-    const urls = [
-        `${baseUrl}/`,
-        `${baseUrl}/customer`,
-        `${baseUrl}/retail`,
-        `${baseUrl}/wholesale`,
-        `${baseUrl}/farmer-sell`,
-    ];
+  return [
+    // Homepage
+    {
+      url: `${baseUrl}/`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 1,
+    },
 
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  ${urls
-            .map(
-                (url) => `
-    <url>
-      <loc>${url}</loc>
-      <lastmod>${new Date().toISOString()}</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-    </url>`
-            )
-            .join("")}
-</urlset>`;
+    // Main pages
+    {
+      url: `${baseUrl}/customer`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/farmer-sell`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/wholesale`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/retail`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
 
-    return new NextResponse(xml, {
-        headers: {
-            "Content-Type": "application/xml",
-        },
-    });
-};
+    // Legal pages
+    {
+      url: `${baseUrl}/privacy-policy`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms-and-conditions`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+  ];
+}

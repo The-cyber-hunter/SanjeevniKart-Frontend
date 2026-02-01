@@ -11,7 +11,9 @@ export default function TermsAndConditionsPage() {
                     name="description"
                     content="Read the Terms and Conditions for using Sanjeevni Kart services, including buying and selling vegetables."
                 />
+                <link rel="canonical" href="https://www.sanjeevnikart.in/terms-and-conditions" />
             </Head>
+
 
             <main className="min-h-screen w-full bg-[#2B2024] text-white font-sans flex justify-center px-6 py-20">
 
