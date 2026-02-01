@@ -1,20 +1,14 @@
-// app/robots.ts
 import { NextResponse } from "next/server";
 
-export function GET() {
-  const siteUrl = "https://www.sanjeevnikart.in";
-
-  const content = `
+export const GET = () => {
+  const robotsTxt = `
 User-agent: *
-Disallow:
+Allow: /
 
-Sitemap: ${siteUrl}/sitemap.xml
-Host: ${siteUrl}
+Sitemap: https://www.sanjeevnikart.in/sitemap.xml
   `.trim();
 
-  return new NextResponse(content, {
-    headers: {
-      "Content-Type": "text/plain",
-    },
+  return new NextResponse(robotsTxt, {
+    headers: { "Content-Type": "text/plain" },
   });
-}
+};

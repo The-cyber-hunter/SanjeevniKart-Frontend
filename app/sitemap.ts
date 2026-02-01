@@ -1,16 +1,30 @@
-// app/sitemap.ts
-import type { MetadataRoute } from "next";
+import { NextResponse } from "next/server";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const GET = () => {
   const baseUrl = "https://www.sanjeevnikart.in";
 
-  const pages = ["", "farmer-sell", "wholesale", "retail", "customer"];
-  const now = new Date().toISOString();
+  const urls = [
+    "/",
+    "/wholesale",
+    "/retail",
+    "/customer",
+    "/farmer-sell"
+  ];
 
-  return pages.map((page) => ({
-    url: `${baseUrl}/${page}`,
-    lastModified: now,
-    changeFrequency: "weekly",
-    priority: page === "" ? 1 : 0.8,
-  }));
-}
+  const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  ${urls
+    .map(
+      (path) => `
+  <url>
+    <loc>${baseUrl}${path}</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+  </url>`
+    )
+    .join("")}
+</urlset>`.trim();
+
+  return new NextResponse(sitemapXml, {
+    headers: { "Content-Type": "application/xml" },
+  });
+};
