@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { AlertTriangle } from "lucide-react";
+import Head from "next/head";
 
 type Veg = {
   id: number;
@@ -167,175 +168,214 @@ export default function CustomerPage() {
 
 
   return (
-    <main className="bg-[#f6faf7] min-h-screen text-gray-800">
-      <div className="max-w-6xl mx-auto px-6 py-16">
-        {/* Navigation */}
-        <div className="flex flex-wrap gap-4 mb-10">
-          <a href="/" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">Home</a>
-          <a href="/wholesale" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">Wholesale /25kg</a>
-          <a href="/retail" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">Retail /10kg</a>
+    <>
+      <Head>
+        <title>Customer Vegetable Order(1kg) | Sanjeevni Kart</title>
+
+        <meta
+          name="description"
+          content="Order fresh vegetables online starting from 0.5kg. Sanjeevni Kart delivers farm-fresh vegetables with transparent pricing and fast local delivery."
+        />
+
+        <meta
+          name="keywords"
+          content="buy vegetables online, fresh vegetables 1kg, local vegetable delivery, Sanjeevni Kart, vegetables near me"
+        />
+
+        <link
+          rel="canonical"
+          href="https://www.sanjeevnikart.in/customer"
+        />
+      </Head>
+
+      <main className="bg-[#2B2024] min-h-screen text-white">
+        <div className="max-w-6xl mx-auto px-6 py-16">
+          <h1 className="text-4xl font-bold text-[#FD0053] mb-10">Customer Vegetable Order</h1>
+          <section className="mb-12 text-[#FFFFFF] leading-relaxed">
+            <h2 className="text-2xl font-semibold mb-3">
+              Fresh Vegetables Delivered in Small Quantities
+            </h2>
+
+            <p>
+              Sanjeevni Kart allows customers to buy fresh vegetables online in flexible
+              quantities starting from <strong>0.5kg</strong>. This service is ideal for
+              households, individuals, and daily cooking needs.
+            </p>
+
+            <p className="mt-3">
+              All vegetables are sourced fresh, hygienically handled, and priced
+              transparently per kilogram. Orders below 3kg may include a small delivery
+              charge to ensure fair logistics.
+            </p>
+
+            <p className="mt-3">
+              Select from leafy greens, root vegetables, gourds, beans, and seasonal
+              produce listed below. Delivery is currently available to selected pincodes
+              only.
+            </p>
+          </section>
+
+
+          {/* Vegetable List */}
+          <div className="grid md:grid-cols-2 gap-6">
+            {vegetables.map((veg) => {
+              const qtyStr = selected[veg.id] ?? "";
+              const qty = qtyStr === "" ? 0 : parseFloat(qtyStr);
+              const vegPrice = getVegPrice(veg).toFixed(2);
+
+              return (
+                <div
+                  key={veg.id}
+                  className="border border-white/10 rounded-2xl p-6 bg-[#1F171A] shadow-lg hover:shadow-xl transition flex items-center gap-4">
+                  <div className="w-24 h-24 bg-green-50 rounded-lg overflow-hidden flex items-center justify-center">
+                    <img src={veg.img} alt={veg.name} className="object-contain h-full w-full" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h3 className="text-xl font-semibold text-white">{veg.name}</h3>
+                        <p className="text-white/70">₹{veg.price} / 10kg</p>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={selected[veg.id] !== undefined}
+                        onChange={() => toggleVeg(veg.id)}
+                        className="w-5 h-5 accent-[#FD0053]"
+                      />
+                    </div>
+
+                    {selected[veg.id] !== undefined && (
+                      <div className="mt-4">
+                        <label className="text-sm text-white/60">Quantity (kg)</label>
+                        <input
+                          type="number"
+                          min={0.5}
+                          step={0.5}
+                          value={qtyStr}
+                          onChange={(e) => updateQty(veg.id, e.target.value)}
+                          onBlur={() => validateQty(veg.id)}
+                          className="block mt-1 w-28 border border-white/20 rounded-lg px-3 py-2 bg-[#2B2024] text-white"
+                        />
+                        <p className="mt-2 text-white/80 font-semibold flex items-center gap-2">
+                          Price: ₹{vegPrice}
+                          {qty < 3 && qty > 0 && (
+                            <span className="text-red-600 font-bold flex items-center gap-1">
+                              <AlertTriangle size={16} /> incl. ₹10 Delivery
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Proceed */}
+          {selectedList.length > 0 && (
+            <div className="mt-12 text-center">
+              <button
+                onClick={() => setShowModal(true)}
+                className="bg-gradient-to-r from-[#A80139] to-[#FD0053] text-white px-10 py-4 rounded-lg font-semibold hover:opacity-90"
+              >
+                Proceed</button>
+            </div>
+          )}
         </div>
 
-        <h1 className="text-4xl font-bold text-green-700 mb-10">Customer Vegetable Order</h1>
+        {/* Modal */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-[#1F171A] w-full max-w-lg rounded-2xl p-6 shadow-2xl border border-white/10">
+              <h2 className="text-2xl font-bold mb-4 text-[#FD0053]">Confirm Your Order</h2>
 
-        {/* Vegetable List */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {vegetables.map((veg) => {
-            const qtyStr = selected[veg.id] ?? "";
-            const qty = qtyStr === "" ? 0 : parseFloat(qtyStr);
-            const vegPrice = getVegPrice(veg).toFixed(2);
+              <div className="mb-4 space-y-1">
+                {selectedList.map((v) => {
+                  const qty = getQty(v.id);
+                  const vegPrice = (v.price * qty).toFixed(2);
+                  const delivery = qty < 3 ? 10 : 0;
+                  return (
+                    <p key={v.id} className="text-white/80">
+                      {v.name} – {qty} kg – ₹{vegPrice}
+                      {delivery > 0 && (
+                        <span className="text-[#FD0053] font-bold ml-2 animate-pulse">
+                          + ₹10 Delivery
+                        </span>
+                      )}
+                    </p>
+                  );
+                })}
+              </div>
 
-            return (
-              <div key={veg.id} className="border border-green-100 rounded-2xl p-6 bg-white shadow hover:shadow-lg transition flex items-center gap-4">
-                <div className="w-24 h-24 bg-green-50 rounded-lg overflow-hidden flex items-center justify-center">
-                  <img src={veg.img} alt={veg.name} className="object-contain h-full w-full" />
+              <div className="mt-4 font-bold text-lg text-[#FD0053]">
+                Total to Pay: ₹{totalPrice.toFixed(2)}
+              </div>
+
+              <div className="space-y-3 mt-4">
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Buyer Name"
+                    className="w-full border border-white/20 bg-[#2B2024] px-3 py-2 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#FD0053]"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  />
+                  {formError.name && <p className="text-red-600 text-sm mt-1">{formError.name}</p>}
                 </div>
-                <div className="flex-1">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="text-xl font-semibold">{veg.name}</h3>
-                      <p className="text-gray-600">₹{veg.price} / 1kg</p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={selected[veg.id] !== undefined}
-                      onChange={() => toggleVeg(veg.id)}
-                      className="w-5 h-5 accent-green-600"
-                    />
-                  </div>
 
-                  {selected[veg.id] !== undefined && (
-                    <div className="mt-4">
-                      <label className="text-sm text-gray-600">Quantity (kg)</label>
-                      <input
-                        type="number"
-                        min={0.5}
-                        step={0.5}
-                        value={qtyStr}
-                        onChange={(e) => updateQty(veg.id, e.target.value)}
-                        onBlur={() => validateQty(veg.id)}
-                        className="block mt-1 w-28 border border-green-200 rounded-lg px-3 py-2 text-gray-800"
-                      />
-                      <p className="mt-2 text-gray-800 font-semibold flex items-center gap-2">
-                        Price: ₹{vegPrice}
-                        {qty < 3 && qty > 0 && (
-                          <span className="text-red-600 font-bold flex items-center gap-1">
-                            <AlertTriangle size={16} /> incl. ₹10 Delivery
-                          </span>
-                        )}
-                      </p>
-                    </div>
-                  )}
+                <div>
+                  <input
+                    type="tel"
+                    placeholder="Phone Number"
+                    className="w-full border border-white/20 bg-[#2B2024] px-3 py-2 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#FD0053]"
+                    value={form.phone}
+                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  />
+                  {formError.phone && <p className="text-red-600 text-sm mt-1">{formError.phone}</p>}
+                </div>
+
+                <div>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    className="w-full border border-white/20 bg-[#2B2024] px-3 py-2 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#FD0053]"
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  />
+                  {formError.email && <p className="text-red-600 text-sm mt-1">{formError.email}</p>}
+                </div>
+
+                <div>
+                  <textarea
+                    placeholder="Delivery Address"
+                    className="w-full border border-white/20 bg-[#2B2024] px-3 py-2 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#FD0053]"
+                    value={form.address}
+                    onChange={(e) => setForm({ ...form, address: e.target.value })}
+                  />
+                  {formError.address && <p className="text-red-600 text-sm mt-1">{formError.address}</p>}
+                </div>
+
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Pincode"
+                    className="w-full border border-white/20 bg-[#2B2024] px-3 py-2 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#FD0053]"
+                    value={pincode}
+                    onChange={(e) => setPincode(e.target.value)}
+                  />
+                  {formError.pincode && <p className="text-red-600 text-sm mt-1">{formError.pincode}</p>}
                 </div>
               </div>
-            );
-          })}
-        </div>
 
-        {/* Proceed */}
-        {selectedList.length > 0 && (
-          <div className="mt-12">
-            <button
-              onClick={() => setShowModal(true)}
-              className="bg-green-600 hover:bg-green-700 text-white px-10 py-4 rounded-lg font-semibold"
-            >
-              Proceed
-            </button>
+              <div className="flex justify-between mt-6">
+                <button onClick={() => setShowModal(false)} className="border border-white/30 px-5 py-2 rounded-lg text-white hover:bg-white/10">Edit Vegetables</button>
+                <button onClick={handleProceed} className="bg-gradient-to-r from-[#A80139] to-[#FD0053] text-white px-6 py-2 rounded-lg hover:opacity-90">Proceed to buy</button>
+              </div>
+            </div>
           </div>
         )}
-      </div>
-
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-green-900/20 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white w-full max-w-lg rounded-2xl p-6 shadow-xl">
-            <h2 className="text-2xl font-bold mb-4 text-green-700">Confirm Your Order</h2>
-
-            <div className="mb-4 space-y-1">
-              {selectedList.map((v) => {
-                const qty = getQty(v.id);
-                const vegPrice = (v.price * qty).toFixed(2);
-                const delivery = qty < 3 ? 10 : 0;
-                return (
-                  <p key={v.id}>
-                    {v.name} – {qty} kg – ₹{vegPrice}
-                    {delivery > 0 && (
-                      <span className="text-red-600 font-bold ml-2 animate-pulse">
-                        + ₹10 Delivery
-                      </span>
-                    )}
-                  </p>
-                );
-              })}
-            </div>
-
-            <div className="mt-4 font-bold text-lg">
-              Total to Pay: ₹{totalPrice.toFixed(2)}
-            </div>
-
-            <div className="space-y-3 mt-4">
-              <div>
-                <input
-                  type="text"
-                  placeholder="Buyer Name"
-                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                />
-                {formError.name && <p className="text-red-600 text-sm mt-1">{formError.name}</p>}
-              </div>
-
-              <div>
-                <input
-                  type="tel"
-                  placeholder="Phone Number"
-                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                />
-                {formError.phone && <p className="text-red-600 text-sm mt-1">{formError.phone}</p>}
-              </div>
-
-              <div>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                />
-                {formError.email && <p className="text-red-600 text-sm mt-1">{formError.email}</p>}
-              </div>
-
-              <div>
-                <textarea
-                  placeholder="Delivery Address"
-                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
-                  value={form.address}
-                  onChange={(e) => setForm({ ...form, address: e.target.value })}
-                />
-                {formError.address && <p className="text-red-600 text-sm mt-1">{formError.address}</p>}
-              </div>
-
-              <div>
-                <input
-                  type="text"
-                  placeholder="Pincode"
-                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
-                  value={pincode}
-                  onChange={(e) => setPincode(e.target.value)}
-                />
-                {formError.pincode && <p className="text-red-600 text-sm mt-1">{formError.pincode}</p>}
-              </div>
-            </div>
-
-            <div className="flex justify-between mt-6">
-              <button onClick={() => setShowModal(false)} className="border border-green-300 px-5 py-2 rounded-lg">Edit Vegetables</button>
-              <button onClick={handleProceed} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg">Proceed to buy</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </main>
+      </main>
+    </>
   );
 }

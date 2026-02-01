@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Head from "next/head";
 
 type Veg = {
   id: number;
@@ -164,172 +165,206 @@ export default function WholesalePage() {
 
 
   return (
-    <main className="bg-[#f6faf7] min-h-screen text-gray-800">
-      <div className="max-w-6xl mx-auto px-6 py-16">
-        {/* Navigation Buttons */}
-        <div className="flex flex-wrap gap-4 mb-10">
-          <a href="/" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">Home</a>
-          <a href="/retail" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">Retail /10kg</a>
-          <a href="/customer" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">Customer /1kg</a>
-        </div>
+    <>
+      <Head>
+        <title>Wholesale Vegetable Supplier in Bihar | Sanjeevni Kart</title>
+        <meta
+          name="description"
+          content="Order fresh vegetables in bulk at wholesale prices. Minimum 25kg per item. Serving selected locations in Bihar."
+        />
+        <link
+          rel="canonical"
+          href="https://www.sanjeevnikart.in/wholesale"
+        />
+      </Head>
 
-        <h1 className="text-4xl font-bold text-green-700 mb-10">Wholesale Vegetable Order</h1>
+      <main className="bg-[#2B2024] min-h-screen text-white">
+        <div className="max-w-6xl mx-auto px-6 py-16">
+          <h1 className="text-4xl font-bold text-[#FD0053] mb-10">Wholesale Vegetables</h1>
+          <section className="mb-12 text-[#FFFFFF] leading-relaxed">
+            <h2 className="text-2xl font-semibold mb-3">
+              Fresh Wholesale Vegetables in Bulk
+            </h2>
+            <p>
+              Sanjeevni Kart supplies fresh farm vegetables at wholesale rates for hotels,
+              retailers, caterers, hostels, and bulk buyers. Each vegetable has a minimum
+              order quantity of 25kg to ensure best pricing and freshness.
+            </p>
+            <p className="mt-2">
+              We currently deliver to selected serviceable pincodes. Please confirm your
+              delivery details before proceeding to WhatsApp checkout.
+            </p>
+          </section>
 
-        {/* Vegetable List */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {vegetables.map((veg) => {
-            const qty = selected[veg.id] || "";
-            const numQty = qty === "" ? 0 : parseInt(qty, 10);
-            const vegPrice = (veg.price * (numQty / 25)).toFixed(2);
-            const showError = qty !== "" && parseInt(qty, 10) < 25;
 
-            return (
-              <div key={veg.id} className="border border-green-100 rounded-2xl p-6 bg-white shadow hover:shadow-lg transition flex items-center gap-4">
-                <div className="w-24 h-24 flex-shrink-0 bg-green-50 rounded-lg overflow-hidden flex items-center justify-center">
-                  <img src={veg.img} alt={veg.name} className="object-contain h-full w-full" />
-                </div>
+          {/* Vegetable List */}
+          <div className="grid md:grid-cols-2 gap-6">
+            {vegetables.map((veg) => {
+              const qty = selected[veg.id] || "";
+              const numQty = qty === "" ? 0 : parseInt(qty, 10);
+              const vegPrice = (veg.price * (numQty / 25)).toFixed(2);
+              const showError = qty !== "" && parseInt(qty, 10) < 25;
 
-                <div className="flex-1">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="text-xl font-semibold">{veg.name}</h3>
-                      <p className="text-gray-600">₹{veg.price} / 25kg</p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={selected[veg.id] !== null && selected[veg.id] !== undefined}
-                      onChange={() => toggleVeg(veg.id)}
-                      className="w-5 h-5 accent-green-600"
-                    />
-
+              return (
+                <div
+                  key={veg.id}
+                  className="border border-white/10 rounded-2xl p-6 bg-[#1F171A] shadow-lg hover:shadow-xl transition flex items-center gap-4"
+                >
+                   <div className="w-24 h-24 flex-shrink-0 bg-green-50 rounded-lg overflow-hidden flex items-center justify-center">
+                    <img src={veg.img} alt={veg.name} className="object-contain h-full w-full" />
                   </div>
 
-                  {selected[veg.id] !== null && selected[veg.id] !== undefined && (
-                    <div className="mt-4">
-                      <label className="text-sm text-gray-600">
-                        Quantity (kg) [min 25]
-                      </label>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h3 className="text-xl font-semibold text-white">{veg.name}</h3>
+                        <p className="text-white/70">₹{veg.price} / 25kg</p>
 
+                      </div>
                       <input
-                        type="number"
-                        value={qty}
-                        onChange={(e) => updateQty(veg.id, e.target.value)}
-                        onBlur={() => validateQty(veg.id)}
-                        className={`block mt-1 w-28 border rounded-lg px-3 py-2 text-gray-800 ${showError ? "border-red-600" : "border-green-200"
-                          }`}
+                        type="checkbox"
+                        checked={selected[veg.id] !== null && selected[veg.id] !== undefined}
+                        onChange={() => toggleVeg(veg.id)}
+                        className="w-5 h-5 accent-[#FD0053]"
                       />
 
-                      {showError && (
-                        <p className="text-red-600 text-sm mt-1">
-                          Quantity must be at least 25 kg
-                        </p>
-                      )}
-
-                      {!showError && qty !== "" && (
-                        <p className="mt-1 text-gray-700 font-semibold">
-                          Price: ₹{vegPrice}
-                        </p>
-                      )}
                     </div>
-                  )}
 
+                    {selected[veg.id] !== null && selected[veg.id] !== undefined && (
+                      <div className="mt-4">
+                        <label className="text-sm text-white/60">
+                          Quantity (kg) [min 25]
+                        </label>
+
+                        <input
+                          type="number"
+                          value={qty}
+                          onChange={(e) => updateQty(veg.id, e.target.value)}
+                          onBlur={() => validateQty(veg.id)}
+                          className={`block mt-1 w-28 border rounded-lg px-3 py-2 bg-[#2B2024] text-white ${showError ? "border-red-600" : "border-white/20"
+                            }`}
+
+                        />
+
+                        {showError && (
+                          <p className="text-[#FD0053] text-sm mt-1">
+                            Quantity must be at least 25 kg
+                          </p>
+                        )}
+
+                        {!showError && qty !== "" && (
+                          <p className="mt-1 text-[#FFFFFF] font-semibold">
+                            Price: ₹{vegPrice}
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Proceed Button */}
+          {selectedList.length > 0 && (
+            <div className="mt-12 text-center">
+              <button onClick={() => setShowModal(true)} className="bg-gradient-to-r from-[#A80139] to-[#FD0053] text-white px-6 py-2 rounded-lg hover:opacity-90">Proceed</button>
+            </div>
+          )}
+        </div>
+
+        {/* Modal */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-[#1F171A] w-full max-w-lg rounded-2xl p-6 shadow-2xl border border-white/10">
+              <h2 className="text-2xl font-bold mb-4 text-[#FD0053]">Confirm Your Order</h2>
+              {/* Selected Vegetables */}
+              <div className="mb-4 space-y-1">
+                {selectedList.map((v) => {
+                  const qty = parseInt(selected[v.id] ?? "0", 10);
+                  const vegPrice = (v.price * (qty / 25)).toFixed(2);
+                  return (
+                    <p key={v.id} className="text-white/80">
+                      {v.name} – {qty} kg – ₹{vegPrice}
+                    </p>
+                  );
+
+                })}
+              </div>
+
+              {/* Total */}
+              <div className="mt-4 font-bold text-lg text-[#FD0053]">
+                Total to Pay: ₹{totalPrice.toFixed(2)}
+              </div>
+
+
+              {/* Form */}
+              <div className="space-y-3 mt-4">
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Buyer Name"
+                    className="w-full border border-white/20 bg-[#2B2024] px-3 py-2 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#FD0053]"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  />
+                  {formError.name && <p className="text-red-600 text-sm mt-1">{formError.name}</p>}
+                </div>
+
+                <div>
+                  <input
+                    type="tel"
+                    placeholder="Phone Number"
+                    className="w-full border border-white/20 bg-[#2B2024] px-3 py-2 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#FD0053]"
+                    value={form.phone}
+                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  />
+                  {formError.phone && <p className="text-red-600 text-sm mt-1">{formError.phone}</p>}
+                </div>
+
+                <div>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    className="w-full border border-white/20 bg-[#2B2024] px-3 py-2 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#FD0053]"
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  />
+                  {formError.email && <p className="text-red-600 text-sm mt-1">{formError.email}</p>}
+                </div>
+
+                <div>
+                  <textarea
+                    placeholder="Delivery Address"
+                    className="w-full border border-white/20 bg-[#2B2024] px-3 py-2 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#FD0053]"
+                    value={form.address}
+                    onChange={(e) => setForm({ ...form, address: e.target.value })}
+                  />
+                  {formError.address && <p className="text-red-600 text-sm mt-1">{formError.address}</p>}
+                </div>
+
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Pincode"
+                    className="w-full border border-white/20 bg-[#2B2024] px-3 py-2 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#FD0053]"
+                    value={pincode}
+                    onChange={(e) => setPincode(e.target.value)}
+                  />
+                  {formError.pincode && <p className="text-red-600 text-sm mt-1">{formError.pincode}</p>}
                 </div>
               </div>
-            );
-          })}
-        </div>
 
-        {/* Proceed Button */}
-        {selectedList.length > 0 && (
-          <div className="mt-12">
-            <button onClick={() => setShowModal(true)} className="bg-green-600 hover:bg-green-700 text-white px-10 py-4 rounded-lg font-semibold">Proceed</button>
+              {/* Buttons */}
+              <div className="flex justify-between mt-6">
+                <button onClick={() => setShowModal(false)} className="border border-white/30 px-5 py-2 rounded-lg text-white hover:bg-white/10">Edit Vegetables</button>
+              <button onClick={handleProceed} className="bg-gradient-to-r from-[#A80139] to-[#FD0053] text-white px-6 py-2 rounded-lg hover:opacity-90">Proceed to buy</button>
+            </div>
+          </div>
           </div>
         )}
-      </div>
-
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-green-900/20 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white w-full max-w-lg rounded-2xl p-6 shadow-xl">
-            <h2 className="text-2xl font-bold mb-4 text-green-700">Confirm Your Order</h2>
-
-            {/* Selected Vegetables */}
-            <div className="mb-4 space-y-1">
-              {selectedList.map((v) => {
-                const qty = parseInt(selected[v.id] ?? "0", 10);
-                const vegPrice = (v.price * (qty / 25)).toFixed(2);
-                return <p key={v.id}>{v.name} – {qty} kg – ₹{vegPrice}</p>;
-              })}
-            </div>
-
-            {/* Total */}
-            <div className="mt-4 font-bold text-lg">Total to Pay: ₹{totalPrice.toFixed(2)}</div>
-
-            {/* Form */}
-            <div className="space-y-3 mt-4">
-              <div>
-                <input
-                  type="text"
-                  placeholder="Buyer Name"
-                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                />
-                {formError.name && <p className="text-red-600 text-sm mt-1">{formError.name}</p>}
-              </div>
-
-              <div>
-                <input
-                  type="tel"
-                  placeholder="Phone Number"
-                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                />
-                {formError.phone && <p className="text-red-600 text-sm mt-1">{formError.phone}</p>}
-              </div>
-
-              <div>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                />
-                {formError.email && <p className="text-red-600 text-sm mt-1">{formError.email}</p>}
-              </div>
-
-              <div>
-                <textarea
-                  placeholder="Delivery Address"
-                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
-                  value={form.address}
-                  onChange={(e) => setForm({ ...form, address: e.target.value })}
-                />
-                {formError.address && <p className="text-red-600 text-sm mt-1">{formError.address}</p>}
-              </div>
-
-              <div>
-                <input
-                  type="text"
-                  placeholder="Pincode"
-                  className="w-full border border-green-200 px-3 py-2 rounded-lg text-gray-800"
-                  value={pincode}
-                  onChange={(e) => setPincode(e.target.value)}
-                />
-                {formError.pincode && <p className="text-red-600 text-sm mt-1">{formError.pincode}</p>}
-              </div>
-            </div>
-
-            {/* Buttons */}
-            <div className="flex justify-between mt-6">
-              <button onClick={() => setShowModal(false)} className="border border-green-300 px-5 py-2 rounded-lg">Edit Vegetables</button>
-              <button onClick={handleProceed} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg">Proceed to buy</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </main>
+    </main >
+    </>
   );
 }

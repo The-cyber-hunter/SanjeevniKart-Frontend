@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { Phone, Mail, ChevronUp, Sprout, Leaf, Truck, Handshake } from "lucide-react";
 
@@ -13,270 +14,281 @@ export default function HomePage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <main className="bg-[#f6faf7] text-gray-800">
-      {/* ================= HERO ================= */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-green-700 to-green-500 text-white">
-        <div className="max-w-7xl mx-auto px-6 py-28 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h1 className="text-5xl md:text-6xl font-extrabold leading-tight mb-6">
-              Sanjeevni Kart
-            </h1>
-            <p className="text-lg md:text-xl mb-8 text-green-100">
-              A smart vegetable supply platform connecting farmers directly with wholesalers, retailers, and households.
-            </p>
-            <div className="flex gap-4 flex-wrap">
-              <Link href="#categories">
-                <button className="bg-white text-green-700 px-8 py-4 rounded-lg font-semibold hover:bg-green-100 transition">
-                  Start Buying
-                </button>
-              </Link>
+    <>
+      <Head>
+        <title>Sanjeevni Kart | Fresh Vegetables from Farmers</title>
+        <meta
+          name="description"
+          content="Sanjeevni Kart connects farmers with buyers directly – wholesalers, retailers, and households. Fresh vegetables, fair pricing, and fast delivery."
+        />
+        <link rel="canonical" href="https://sanjeevnikart.com/" />
+      </Head>
 
-              {/* Selling button */}
+      <main className="bg-[#2B2024] text-[#FFFFFF] font-sans w-full overflow-x-hidden">
+
+        {/* ================= HERO ================= */}
+        <section className="relative overflow-hidden bg-[#2B2024]">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-28 grid grid-cols-1 md:grid-cols-2 gap-10">
+            {/* Left text */}
+            <div>
+              <h1 className="text-5xl md:text-6xl font-extrabold leading-tight mb-6">
+                Fresh Vegetables <br />Direct from Farmers
+              </h1>
+              <p className="text-lg md:text-xl mb-8 text-white">
+                Sanjeevni Kart connects farmers directly with wholesalers, retailers, and households.
+                Enjoy fresh produce with transparent pricing and fast delivery.
+              </p>
+              <div className="flex gap-4 flex-wrap">
+                <Link href="#categories">
+                  <button className="bg-gradient-to-r from-[#A80139] to-[#FD0053] text-white px-8 py-4 rounded-xl font-bold shadow-xl transform transition hover:scale-105 hover:shadow-2xl">
+                    Start Buying
+                  </button>
+                </Link>
+                <Link href="/farmer-sell">
+                  <button className="border-2 border-white px-8 py-4 rounded-xl font-bold hover:bg-gradient-to-r hover:from-[#A80139] hover:to-[#FD0053] hover:text-white transition transform shadow-xl hover:scale-105">
+                    Sell Vegetables
+                  </button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Right hero image */}
+            <div className="flex-1 relative animate-fadeInRight">
+              <div className="relative w-full h-[350px] md:h-[400px] lg:h-[450px] rounded-3xl overflow-hidden shadow-2xl">
+                <img
+                  src="/hero.png"
+                  alt="Fresh Vegetables"
+                  className="w-full h-full object-cover object-center max-w-full"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-[#2B2024]/80 to-transparent"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ================= BUYING CATEGORIES ================= */}
+        <section id="categories" className="py-24 bg-[#2B2024]">
+          <div className="max-w-7xl mx-auto px-6">
+            <h2 className="text-4xl font-bold text-center text-[#FD0053] mb-16">
+              Buying Options
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+              {[
+                {
+                  title: "Wholesale",
+                  desc: "Perfect for restaurants, and institutions needing large volumes at fair prices.",
+                  features: ["Pricing per 25kg", "High-volume discounts", "Flexible delivery"],
+                },
+                {
+                  title: "Retail",
+                  desc: "Shop owners and vendors can buy medium quantities for consistent supply.",
+                  features: ["Pricing per 10kg", "Regular restock", "Balanced margins"],
+                },
+                {
+                  title: "Customer",
+                  desc: "Households receive fresh vegetables delivered daily at affordable prices.",
+                  features: ["Pricing per kg", "Daily fresh stock", "Home delivery"],
+                },
+              ].map((cat, idx) => (
+                <Link key={cat.title} href={`/${cat.title.toLowerCase()}`}>
+                  <div className="relative p-[4px] rounded-3xl bg-gradient-to-r from-[#A80139] to-[#FD0053] transform transition hover:scale-105">
+                    <div className="bg-[#2B2024] rounded-3xl p-10 text-center shadow-2xl">
+                      <h3 className="text-2xl font-bold mb-4 text-[#FD0053]">{cat.title}</h3>
+                      <p className="mb-6">{cat.desc}</p>
+                      <ul className="space-y-2 text-sm">
+                        {cat.features.map((f) => (
+                          <li key={f}>• {f}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </Link>
+
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ================= HOW IT WORKS ================= */}
+        <section id="how" className="py-24 bg-[#A80139] text-[#FFFFFF]">
+          <div className="max-w-6xl mx-auto px-6">
+            <h2 className="text-4xl font-bold text-center  text-[#FFFFFF] mb-16">
+              How Sanjeevni Kart Works
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+              {[
+                { icon: <Sprout size={36} />, title: "Choose Category", desc: "Pick Wholesale, Retail, or Customer based on your need." },
+                { icon: <Leaf size={36} />, title: "Select Vegetables", desc: "Choose products, quantity, and check pricing." },
+                { icon: <Truck size={36} />, title: "Confirm & Delivery", desc: "Confirm order on WhatsApp and receive fast delivery." },
+              ].map((step, idx) => (
+                <div key={step.title} className={`bg-[#FD0053] p-10 rounded-3xl shadow-2xl text-center transform transition hover:scale-105 hover:shadow-3xl animate-fadeInUp delay-${idx * 100}`}>
+                  <div className="text-[#FFFFFF] mx-auto mb-4">{step.icon}</div>
+                  <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+                  <p>{step.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ================= SELLING SYSTEM ================= */}
+        <section id="selling" className="py-28 bg-[#2B2024] text-white">
+          <div className="max-w-7xl mx-auto px-6">
+
+            {/* Heading */}
+            <div className="text-center mb-20">
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
+                Selling System for <span className="text-[#FD0053]">Farmers</span>
+              </h2>
+              <p className="text-white/80 max-w-2xl mx-auto text-lg">
+                Sell your vegetables easily without searching for buyers.
+                Sanjeevni Kart handles pricing, collection, and payment — end to end.
+              </p>
+            </div>
+
+            {/* Steps */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+
+              {/* STEP 1 */}
+              <div className="bg-[#1F171A] border border-[#FD0053]/30 rounded-2xl p-8 hover:border-[#FD0053] transition">
+                <div className="text-[#FD0053] text-3xl font-bold mb-4">01</div>
+                <h3 className="text-xl font-semibold mb-3">
+                  Select Vegetables
+                </h3>
+                <p className="text-white/80 text-sm leading-relaxed">
+                  Farmers choose vegetables from a predefined list available on the platform.
+                </p>
+              </div>
+
+              {/* STEP 2 */}
+              <div className="bg-[#1F171A] border border-[#FD0053]/30 rounded-2xl p-8 hover:border-[#FD0053] transition">
+                <div className="text-[#FD0053] text-3xl font-bold mb-4">02</div>
+                <h3 className="text-xl font-semibold mb-3">
+                  Select Quantity
+                </h3>
+                <p className="text-white/80 text-sm leading-relaxed">
+                  Enter the quantity available for each selected vegetable.
+                </p>
+              </div>
+
+              {/* STEP 3 */}
+              <div className="bg-[#1F171A] border border-[#FD0053]/30 rounded-2xl p-8 hover:border-[#FD0053] transition">
+                <div className="text-[#FD0053] text-3xl font-bold mb-4">03</div>
+                <h3 className="text-xl font-semibold mb-3">
+                  Fill Farmer Details
+                </h3>
+                <p className="text-white/80 text-sm leading-relaxed">
+                  A form appears where farmers provide name, location, and contact details.
+                </p>
+              </div>
+
+              {/* STEP 4 */}
+              <div className="bg-[#1F171A] border border-[#FD0053]/30 rounded-2xl p-8 hover:border-[#FD0053] transition">
+                <div className="text-[#FD0053] text-3xl font-bold mb-4">04</div>
+                <h3 className="text-xl font-semibold mb-3">
+                  Submit the Form
+                </h3>
+                <p className="text-white/80 text-sm leading-relaxed">
+                  After reviewing the details, farmers submit the form securely.
+                </p>
+              </div>
+
+              {/* STEP 5 */}
+              <div className="bg-[#1F171A] border border-[#FD0053]/30 rounded-2xl p-8 hover:border-[#FD0053] transition">
+                <div className="text-[#FD0053] text-3xl font-bold mb-4">05</div>
+                <h3 className="text-xl font-semibold mb-3">
+                  Auto WhatsApp Redirect
+                </h3>
+                <p className="text-white/80 text-sm leading-relaxed">
+                  Farmers are redirected to WhatsApp with an auto-generated message containing all details.
+                </p>
+              </div>
+
+              {/* STEP 6 */}
+              <div className="bg-[#1F171A] border border-[#FD0053]/30 rounded-2xl p-8 hover:border-[#FD0053] transition">
+                <div className="text-[#FD0053] text-3xl font-bold mb-4">06</div>
+                <h3 className="text-xl font-semibold mb-3">
+                  Collection & Payment
+                </h3>
+                <p className="text-sm leading-relaxed">
+                  Sanjeevni Kart confirms the request, collects vegetables, and ensures timely payment.
+                </p>
+              </div>
+
+            </div>
+
+            {/* CTA */}
+            <div className="text-center mt-20">
               <Link href="/farmer-sell">
-                <button className="border border-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-green-700 transition">
-                  Sell Your Vegetables
-                </button>
-              </Link>
-
-              <Link href="#how">
-                <button className="border border-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-green-700 transition">
-                  How It Works
+                <button className="bg-gradient-to-r from-[#A80139] to-[#FD0053] px-10 py-4 rounded-xl font-bold shadow-xl hover:scale-105 transition">
+                  Start Selling Vegetables
                 </button>
               </Link>
             </div>
+
           </div>
+        </section>
 
-          <div className="hidden md:block">
-            <div className="bg-white/10 p-10 rounded-2xl backdrop-blur">
-              <p className="text-xl font-semibold mb-4">Fresh • Transparent • Reliable</p>
-              <p className="text-green-100">
-                Optimized pricing for bulk buyers, shop owners, and home customers.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ================= BUYING CATEGORIES ================= */}
-      <section id="categories" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center text-green-700 mb-16">
-            Choose Your Buying Option
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {/* Wholesale */}
-            <Link href="/wholesale">
-              <div className="bg-blue-50 p-10 rounded-2xl shadow border border-blue-100 hover:border-blue-600 hover:shadow-xl transition transform duration-300 hover:-translate-y-2 text-center cursor-pointer">
-                <h3 className="text-2xl font-bold mb-4 text-blue-700">Wholesale</h3>
-                <p className="mb-6 text-gray-600">Best for bulk buyers & institutions.</p>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li>• Pricing per 25kg</li>
-                  <li>• Lowest cost per kg</li>
-                  <li>• High volume orders</li>
-                </ul>
+        {/* ================= WHY CHOOSE US ================= */}
+        <section className="py-24 bg-[#A80139] text-[#FFFFFF]">
+          <div className="max-w-6xl mx-auto px-6">
+            <h2 className="text-4xl font-bold text-center mb-16">
+              Why Choose Sanjeevni Kart
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+              <div className="bg-[#2B2024] p-6 rounded-3xl shadow-2xl text-center hover:scale-105 transition transform">
+                <Leaf size={32} className="text-[#FD0053] mx-auto mb-4" />
+                <h4 className="font-semibold mb-2">Fresh Vegetables</h4>
+                <p className="text-sm">Daily fresh produce delivered directly from farms.</p>
               </div>
-            </Link>
-
-            {/* Retail */}
-            <Link href="/retail">
-              <div className="bg-orange-50 p-10 rounded-2xl shadow border border-orange-100 hover:border-orange-600 hover:shadow-xl transition transform duration-300 hover:-translate-y-2 text-center cursor-pointer">
-                <h3 className="text-2xl font-bold mb-4 text-orange-700">Retail</h3>
-                <p className="mb-6 text-gray-600">Designed for shop owners & vendors.</p>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li>• Pricing per 10kg</li>
-                  <li>• Balanced margins</li>
-                  <li>• Medium quantity</li>
-                </ul>
+              <div className="bg-[#2B2024] p-6 rounded-3xl shadow-2xl text-center hover:scale-105 transition transform">
+                <Handshake size={32} className="text-[#FD0053] mx-auto mb-4" />
+                <h4 className="font-semibold mb-2">Transparent Pricing</h4>
+                <p className="text-sm">No hidden charges, complete clarity for buyers and sellers.</p>
               </div>
-            </Link>
-
-            {/* Customer */}
-            <Link href="/customer">
-              <div className="bg-green-50 p-10 rounded-2xl shadow border border-green-100 hover:border-green-600 hover:shadow-xl transition transform duration-300 hover:-translate-y-2 text-center cursor-pointer">
-                <h3 className="text-2xl font-bold mb-4 text-green-700">Customer</h3>
-                <p className="mb-6 text-gray-600">Ideal for households & daily needs.</p>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li>• Pricing per kg</li>
-                  <li>• Fresh daily stock</li>
-                  <li>• Home delivery</li>
-                </ul>
+              <div className="bg-[#2B2024] p-6 rounded-3xl shadow-2xl text-center hover:scale-105 transition transform">
+                <Sprout size={32} className="text-[#FD0053] mx-auto mb-4" />
+                <h4 className="font-semibold mb-2">Direct Farmers</h4>
+                <p className="text-sm">We connect you with verified and trusted local farmers.</p>
               </div>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ================= HOW IT WORKS (Buying) ================= */}
-      <section id="how" className="py-24 bg-green-50">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center text-green-700 mb-16">
-            How Sanjeevni Kart Works for Buyers
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="bg-white p-8 rounded-xl shadow text-center">
-              <Sprout size={36} className="text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Choose Category</h3>
-              <p className="text-gray-600">Select Wholesale, Retail, or Customer based on your needs.</p>
-            </div>
-
-            <div className="bg-white p-8 rounded-xl shadow text-center">
-              <Leaf size={36} className="text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Select Vegetables</h3>
-              <p className="text-gray-600">Choose vegetables, quantities, and review pricing.</p>
-            </div>
-
-            <div className="bg-white p-8 rounded-xl shadow text-center">
-              <Truck size={36} className="text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Confirm on WhatsApp</h3>
-              <p className="text-gray-600">Order details are shared for confirmation and delivery.</p>
+              <div className="bg-[#2B2024] p-6 rounded-3xl shadow-2xl text-center hover:scale-105 transition transform">
+                <Truck size={32} className="text-[#FD0053] mx-auto mb-4" />
+                <h4 className="font-semibold mb-2">Fast Delivery</h4>
+                <p className="text-sm">Reliable delivery service to your doorstep on time.</p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-      
-      {/* ================= SELLING SYSTEM DESCRIPTION ================= */}
-      <section id="selling" className="py-24 bg-green-50">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center text-green-700 mb-12">
-            Selling System for Farmers
-          </h2>
+        </section>
 
-          <p className="text-center text-lg text-gray-700 mb-12">
-            Farmers can sell their fresh vegetables directly to Sanjeevni Kart. We purchase vegetables from farmers at fair prices, store them in our storage,
-            and then distribute them to wholesalers, retailers, and customers. Farmers do not need to contact buyers directly – we handle the entire sales process
-            to ensure convenience and timely payments.
-          </p>
-
-          <h3 className="text-3xl font-semibold text-green-700 mb-8 text-center">
-            How It Works for Selling
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="bg-white p-8 rounded-xl shadow text-center">
-              <Sprout size={36} className="text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Register & List Vegetables</h3>
-              <p className="text-gray-600">
-                Farmers register on the platform and submit details of the vegetables they want to sell.
-              </p>
-            </div>
-
-            <div className="bg-white p-8 rounded-xl shadow text-center">
-              <Handshake size={36} className="text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">We Purchase & Store</h3>
-              <p className="text-gray-600">
-                Sanjeevni Kart reviews the listing, confirms the purchase, and collects the vegetables for storage.
-              </p>
-            </div>
-
-            <div className="bg-white p-8 rounded-xl shadow text-center">
-              <Truck size={36} className="text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Timely Payment</h3>
-              <p className="text-gray-600">
-                Farmers receive payment directly from us after the vegetables are collected and verified.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      {/* ================= WHY CHOOSE US ================= */}
-      <section className="py-24 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center text-green-700 mb-16">
-            Why Choose Sanjeevni Kart
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="bg-green-50 p-6 rounded-xl shadow text-center">
-              <Leaf size={32} className="text-green-600 mx-auto mb-4" />
-              <h4 className="font-semibold mb-2">Fresh Vegetables</h4>
-              <p className="text-sm text-gray-600">Farm fresh vegetables delivered daily.</p>
-            </div>
-
-            <div className="bg-green-50 p-6 rounded-xl shadow text-center">
-              <Handshake size={32} className="text-green-600 mx-auto mb-4" />
-              <h4 className="font-semibold mb-2">Transparent Pricing</h4>
-              <p className="text-sm text-gray-600">No hidden charges, clear pricing.</p>
-            </div>
-
-            <div className="bg-green-50 p-6 rounded-xl shadow text-center">
-              <Sprout size={32} className="text-green-600 mx-auto mb-4" />
-              <h4 className="font-semibold mb-2">Direct Farmers</h4>
-              <p className="text-sm text-gray-600">Connected with trusted farmers.</p>
-            </div>
-
-            <div className="bg-green-50 p-6 rounded-xl shadow text-center">
-              <Truck size={32} className="text-green-600 mx-auto mb-4" />
-              <h4 className="font-semibold mb-2">Fast Delivery</h4>
-              <p className="text-sm text-gray-600">Reliable delivery at your doorstep.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ================= FOOTER ================= */}
-      <footer className="bg-green-800 text-white pt-16 pb-8">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
-          <div>
-            <h3 className="text-xl font-bold mb-4">Sanjeevni Kart</h3>
-            <p className="text-gray-300 text-sm">Connecting farmers directly with buyers.</p>
-          </div>
-
-          <div>
-            <h3 className="text-xl font-bold mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-gray-300 text-sm">
-              <li><a href="/wholesale">Wholesale</a></li>
-              <li><a href="/retail">Retail</a></li>
-              <li><a href="/customer">Customer</a></li>
-              <li><a href="/farmer-sell">Sell Vegetables</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-xl font-bold mb-4">Contact</h3>
-            <p className="text-gray-300 text-sm">Email: sanjeevnikart@gmail.com</p>
-            <p className="text-gray-300 text-sm">Phone: +91 6206895209</p>
-          </div>
-        </div>
-
-        <div className="mt-10 border-t border-green-700 pt-6 text-center text-gray-400 text-sm">
-          © {new Date().getFullYear()} Sanjeevni Kart. All rights reserved.
-        </div>
-      </footer>
-
-      {/* ================= FLOATING BUTTONS ================= */}
-      <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50">
-        <a
-          href="tel:+916206895209"
-          className="bg-green-600 hover:bg-green-700 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl ring-2 ring-green-300 transition hover:scale-110"
-        >
-          <Phone size={26} />
-        </a>
-
-        <a
-          href="mailto:sanjeevnikart@gmail.com"
-          className="bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl ring-2 ring-blue-300 transition hover:scale-110"
-        >
-          <Mail size={26} />
-        </a>
-
-        {showScroll && (
-          <button
-            onClick={scrollToTop}
-            className="bg-purple-600 hover:bg-purple-700 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl ring-2 ring-purple-300 transition hover:scale-110"
+        {/* ================= FLOATING BUTTONS ================= */}
+        <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50">
+          <a
+            href="tel:+916206895209"
+            className="bg-[#A80139] hover:bg-[#FD0053] text-[#FFFFFF] w-14 h-14 rounded-full flex items-center justify-center shadow-xl ring-2 ring-[#FD0053] transition hover:scale-110"
           >
-            <ChevronUp size={26} />
-          </button>
-        )}
-      </div>
-    </main>
+            <Phone size={26} />
+          </a>
+          <a
+            href="mailto:sanjeevnikart@gmail.com"
+            className="bg-[#FD0053] hover:bg-[#A80139] text-[#FFFFFF] w-14 h-14 rounded-full flex items-center justify-center shadow-xl ring-2 ring-[#FFFFFF] transition hover:scale-110"
+          >
+            <Mail size={26} />
+          </a>
+          {showScroll && (
+            <button
+              onClick={scrollToTop}
+              className="bg-[#2B2024] hover:bg-[#A80139] text-[#FFFFFF] w-14 h-14 rounded-full flex items-center justify-center shadow-xl ring-2 ring-[#FD0053] transition hover:scale-110"
+            >
+              <ChevronUp size={26} />
+            </button>
+          )}
+        </div>
+      </main>
+    </>
   );
 }
