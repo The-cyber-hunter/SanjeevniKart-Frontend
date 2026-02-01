@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
-import { Phone, Mail, ChevronUp, Sprout, Leaf, Truck, Handshake } from "lucide-react";
+import { Phone, Mail, ChevronUp, Sprout, Leaf, Truck, Handshake, Plus, Minus, MapPin } from "lucide-react";
 
 export default function HomePage() {
   const [showScroll, setShowScroll] = useState(false);
@@ -24,9 +24,99 @@ export default function HomePage() {
           name="description"
           content="Sanjeevni Kart connects farmers with buyers directly – wholesalers, retailers, and households. Fresh vegetables, fair pricing, and fast delivery."
         />
-        <link rel="canonical" href="https://sanjeevnikart.com/" />
-      </Head>
+        <link rel="canonical" href="https://www.sanjeevnikart.in/" />
 
+        {/* ================= FAQ SCHEMA ================= */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "How do I place an order?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Select your category (Wholesale, Retail, Customer), choose vegetables and quantity, and confirm via WhatsApp. Our team will deliver directly to you."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Can I buy in small quantities?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes! Customers can buy per kg, retailers per 10kg, and wholesalers in larger volumes."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How is pricing determined?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Pricing is transparent and fair, based on quantity, season, and current market rates. No hidden charges."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How do farmers sell their produce?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Farmers fill out the form, select vegetables and quantity, and submit. They are then redirected to WhatsApp for confirmation."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Do you deliver to my location?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "We deliver across our operational regions. Delivery details are confirmed when placing your order."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is the produce fresh?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Absolutely! All vegetables are sourced directly from verified farmers and delivered fresh daily."
+                  }
+                }
+              ]
+            })
+          }}
+        />
+
+        {/* ================= HOW TO TRACK SCHEMA ================= */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "HowTo",
+              "name": "How to Track Your Sanjeevni Kart Order",
+              "step": [
+                {
+                  "@type": "HowToStep",
+                  "name": "Place Your Order",
+                  "text": "Submit your order via Wholesale, Retail, Customer, or Farmer Sell page with your details."
+                },
+                {
+                  "@type": "HowToStep",
+                  "name": "Delivery Starts",
+                  "text": "Once the delivery agent starts, the order status is updated."
+                },
+                {
+                  "@type": "HowToStep",
+                  "name": "Live Location on WhatsApp",
+                  "text": "Track the delivery in real-time via the WhatsApp link sent to the chat where you placed your order."
+                }
+              ]
+            })
+          }}
+        />
+      </Head>
+      
       <main className="bg-[#2B2024] text-[#FFFFFF] font-sans w-full overflow-x-hidden">
 
         {/* ================= HERO ================= */}
@@ -57,16 +147,16 @@ export default function HomePage() {
 
             {/* Right hero image */}
             <div className="flex-1 relative animate-fadeInRight">
-              <div className="relative w-full h-[350px] md:h-[400px] lg:h-[450px] rounded-3xl overflow-hidden shadow-2xl">
+              <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl h-[350px] md:h-[400px] lg:h-[450px] flex">
                 <img
                   src="/hero.png"
                   alt="Fresh Vegetables"
-                  className="w-full h-full object-cover object-center max-w-full"
+                  className="w-full h-full object-cover"
                 />
-
                 <div className="absolute inset-0 bg-gradient-to-t from-[#2B2024]/80 to-transparent"></div>
               </div>
             </div>
+
           </div>
         </section>
 
@@ -264,6 +354,116 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* ================= FAQ ================= */}
+        <section id="faq" className="py-24 bg-[#2B2024] text-white">
+          <div className="max-w-7xl mx-auto px-6">
+            <h2 className="text-4xl font-bold text-center text-[#FD0053] mb-16">
+              Frequently Asked Questions
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                {
+                  question: "How do I place an order?",
+                  answer:
+                    "Select your category (Wholesale, Retail, Customer), choose vegetables and quantity, and confirm via WhatsApp. Our team will deliver directly to you.",
+                },
+                {
+                  question: "Can I buy in small quantities?",
+                  answer:
+                    "Yes! Customers can buy per kg, retailers per 10kg, and wholesalers in larger volumes.",
+                },
+                {
+                  question: "How is pricing determined?",
+                  answer:
+                    "Pricing is transparent and fair, based on quantity, season, and current market rates. No hidden charges.",
+                },
+                {
+                  question: "How do farmers sell their produce?",
+                  answer:
+                    "Farmers fill out the form, select vegetables and quantity, and submit. They are then redirected to WhatsApp for confirmation.",
+                },
+                {
+                  question: "Do you deliver to my location?",
+                  answer:
+                    "We deliver across our operational regions. Delivery details are confirmed when placing your order.",
+                },
+                {
+                  question: "Is the produce fresh?",
+                  answer:
+                    "Absolutely! All vegetables are sourced directly from verified farmers and delivered fresh daily.",
+                },
+              ].map((faq, idx) => {
+                const [open, setOpen] = useState(false);
+                return (
+                  <div
+                    key={idx}
+                    className="bg-[#1F171A] p-6 rounded-3xl shadow-2xl hover:scale-105 transform transition"
+                  >
+                    <button
+                      onClick={() => setOpen(!open)}
+                      className="w-full flex justify-between items-center text-left"
+                    >
+                      <h3 className="text-lg font-semibold mb-0 text-[#FD0053]">
+                        {faq.question}
+                      </h3>
+                      {open ? (
+                        <Minus size={20} className="text-[#FD0053]" />
+                      ) : (
+                        <Plus size={20} className="text-[#FD0053]" />
+                      )}
+                    </button>
+                    {open && (
+                      <p className="mt-4 text-white/80 text-sm">{faq.answer}</p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ================= HOW TO TRACK ================= */}
+        <section id="tracking" className="py-24 bg-[#A80139] text-white">
+          <div className="max-w-7xl mx-auto px-6">
+            <h2 className="text-4xl font-bold text-center mb-16">
+              How to Track Your Order
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+              {/* STEP 1 */}
+              <div className="bg-[#2B2024] p-10 rounded-3xl shadow-2xl text-center transform transition hover:scale-105">
+                <Phone size={36} className="text-[#FD0053] mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">Place Your Order</h3>
+                <p className="text-sm">
+                  Submit your order via Wholesale, Retail, Customer, or Farmer Sell page.
+                  Include your details so we can contact you.
+                </p>
+              </div>
+
+              {/* STEP 2 */}
+              <div className="bg-[#2B2024] p-10 rounded-3xl shadow-2xl text-center transform transition hover:scale-105">
+                <Truck size={36} className="text-[#FD0053] mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">Delivery Starts</h3>
+                <p className="text-sm">
+                  Once the delivery agent starts from the farm or warehouse, the order status is updated.
+                </p>
+              </div>
+
+              {/* STEP 3 */}
+              <div className="bg-[#2B2024] p-10 rounded-3xl shadow-2xl text-center transform transition hover:scale-105">
+                <MapPin size={36} className="text-[#FD0053] mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">Live Location on WhatsApp</h3>
+                <p className="text-sm">
+                  Track the delivery in real-time! We send a live location link directly in the WhatsApp chat where you placed your order.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
 
         {/* ================= FLOATING BUTTONS ================= */}
         <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50">

@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   title: "Sanjeevni Kart - Fresh Vegetables Online",
   description:
     "Order fresh vegetables wholesale, retail, or per kg via Sanjeevni Kart.",
+  metadataBase: new URL("https://www.sanjeevnikart.in"),
   icons: {
     icon: "/favicon.ico",
   },
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     title: "Sanjeevni Kart - Fresh Vegetables Online",
     description:
       "Order fresh vegetables wholesale, retail, or per kg via Sanjeevni Kart.",
-    url: "https://sanjeevnikart.com",
+    url: "https://www.sanjeevnikart.in",
     siteName: "Sanjeevni Kart",
     images: ["/images/og-image.png"],
     locale: "en_US",
@@ -47,6 +48,28 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Sanjeevni Kart",
+    url: "https://www.sanjeevnikart.in",
+    logo: "https://www.sanjeevnikart.in/favicon.ico",
+    sameAs: [
+      "https://www.facebook.com/sanjeevnikart",
+      "https://www.instagram.com/sanjeevnikart",
+      "https://www.linkedin.com/company/sanjeevnikart"
+    ],
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        telephone: "+91 6206 895209",
+        contactType: "customer service",
+        areaServed: "IN",
+        availableLanguage: ["English", "Hindi"]
+      }
+    ]
+  };
+
   return (
     <html lang="en">
       <body
@@ -54,6 +77,12 @@ export default function RootLayout({
       >
         {/* Global Navbar */}
         <Navbar />
+
+        {/* JSON-LD Organization Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+        />
 
         {/* Page Content */}
         <main className="pt-20 min-h-screen w-full overflow-x-hidden">
