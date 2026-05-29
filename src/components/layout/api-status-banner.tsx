@@ -9,7 +9,7 @@ export function ApiStatusBanner() {
   if (!catalogError || loading) return null;
 
   return (
-    <div className="border-b border-amber-200 bg-amber-50 px-4 py-3 text-center text-sm text-amber-950">
+    <div className="border-b border-amber-200 bg-amber-50 px-4 py-3 text-center text-sm break-words text-amber-950">
       <p className="font-semibold">Could not load store data from the server</p>
       <p className="mt-1 text-xs opacity-90">{catalogError}</p>
       <p className="mt-1 text-xs opacity-75">

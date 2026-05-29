@@ -8,7 +8,6 @@ import { RequireAuth } from "@/components/auth/require-auth";
 import { DeliveryForm } from "@/components/checkout/delivery-form";
 import { AddCropsLink } from "@/components/farmers/add-crops-link";
 import { TrackRequestsLink } from "@/components/farmers/track-requests-link";
-import { ShopLayout } from "@/components/layout/shop-layout";
 import { useShop } from "@/context/shop-context";
 import { api, getApiErrorMessage } from "@/lib/api";
 import { loadCheckoutDraft, saveCheckoutDraft } from "@/lib/checkout-storage";
@@ -84,7 +83,7 @@ function SellCartForm() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="font-display text-3xl font-semibold text-sk-brown">Supply list</h1>
+        <h1 className="font-display text-3xl font-semibold text-sk-brown">Selling cart</h1>
         <TrackRequestsLink compact />
       </div>
 
@@ -93,7 +92,7 @@ function SellCartForm() {
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sk-success/10 text-sk-success">
             <Sprout size={28} strokeWidth={2} aria-hidden />
           </div>
-          <p className="mt-4 font-display text-lg font-semibold text-sk-brown">No crops in your list</p>
+          <p className="mt-4 font-display text-lg font-semibold text-sk-brown">No crops in your selling cart</p>
           <p className="mt-2 max-w-sm text-sm text-sk-muted">
             Browse farmer supply and add what you want to sell. We&apos;ll quote pickup and payout
             here.
@@ -104,12 +103,12 @@ function SellCartForm() {
         <div className="mt-8 space-y-8">
           <ul className="divide-y divide-sk-border rounded-2xl border border-sk-border bg-white">
             {sellCart.map((item) => (
-              <li key={item.product.id} className="flex items-center justify-between gap-4 px-5 py-4">
-                <div>
-                  <p className="font-medium">{item.product.name}</p>
+              <li key={item.product.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-4 sm:gap-4 sm:px-5">
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium break-words">{item.product.name}</p>
                   <p className="text-sm text-sk-muted">₹{item.product.price}/kg</p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex shrink-0 items-center gap-2">
                   <button
                     type="button"
                     className="h-8 w-8 rounded border font-bold"
@@ -183,7 +182,7 @@ function SellCartForm() {
             onClick={clearSellCart}
             className="text-sm font-semibold text-sk-error hover:underline"
           >
-            Clear supply list
+            Clear selling cart
           </button>
         </div>
       )}
@@ -193,13 +192,11 @@ function SellCartForm() {
 
 export default function FarmersCartPage() {
   return (
-    <ShopLayout>
-      <RequireAuth
-        title="Sign in to submit crops"
-        description="Sign in so we can contact you about pickup and payout."
-      >
-        <SellCartForm />
-      </RequireAuth>
-    </ShopLayout>
+    <RequireAuth
+      title="Sign in to submit crops"
+      description="Sign in so we can contact you about pickup and payout."
+    >
+      <SellCartForm />
+    </RequireAuth>
   );
 }

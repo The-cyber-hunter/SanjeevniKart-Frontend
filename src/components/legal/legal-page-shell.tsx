@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { LegalSubnav } from "@/components/legal/legal-subnav";
-import { ShopLayout } from "@/components/layout/shop-layout";
 
 export function LegalPageShell({
   title,
@@ -13,8 +12,7 @@ export function LegalPageShell({
   children: React.ReactNode;
 }) {
   return (
-    <ShopLayout header="solid">
-      <article className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+    <article className="mx-auto max-w-3xl min-w-0 px-4 py-10 break-words sm:px-6">
         <nav className="text-sm text-sk-muted" aria-label="Breadcrumb">
           <Link href="/" className="font-medium hover:text-sk-primary">
             Home
@@ -40,7 +38,6 @@ export function LegalPageShell({
           .
         </p>
       </article>
-    </ShopLayout>
   );
 }
 

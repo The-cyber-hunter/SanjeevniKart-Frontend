@@ -2,15 +2,13 @@
 
 import { Mail, Phone } from "lucide-react";
 
-import { ShopLayout } from "@/components/layout/shop-layout";
 import { useShop } from "@/context/shop-context";
 
 export default function SupportPage() {
   const { appConfig } = useShop();
 
   return (
-    <ShopLayout>
-      <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
         <h1 className="font-display text-3xl font-semibold text-sk-brown">We&apos;re here to help</h1>
         <p className="mt-2 max-w-xl text-sk-muted">
           Questions about orders, delivery, or selling produce — reach us directly.
@@ -39,6 +37,5 @@ export default function SupportPage() {
           </a>
         </div>
       </div>
-    </ShopLayout>
   );
 }

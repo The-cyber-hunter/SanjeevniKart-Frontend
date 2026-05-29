@@ -13,8 +13,8 @@ export function SellCartFloatingBar() {
   return (
     <FloatingActionBar
       href="/farmers/cart"
-      label={`Go to supply list (${count})`}
-      ariaLabel="Open supply list"
+      label={`Go to selling cart (${count})`}
+      ariaLabel="Open selling cart"
     />
   );
 }

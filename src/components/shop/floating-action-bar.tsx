@@ -10,7 +10,7 @@ type FloatingActionBarProps = {
 export function FloatingActionBar({ href, label, ariaLabel }: FloatingActionBarProps) {
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-50 px-4 pb-4 pt-2 sm:px-6"
+      className="fixed inset-x-0 bottom-0 z-50 px-4 pt-2 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-6"
       style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
       role="region"
       aria-label={ariaLabel}

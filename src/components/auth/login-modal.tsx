@@ -88,7 +88,7 @@ export function LoginModal() {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex justify-end bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/40 p-0 backdrop-blur-sm sm:items-stretch sm:justify-end"
       role="dialog"
       aria-modal="true"
       aria-labelledby="login-title"
@@ -99,7 +99,7 @@ export function LoginModal() {
         aria-label="Close sign in"
         onClick={closeLogin}
       />
-      <div className="relative flex h-full w-full max-w-md flex-col bg-white shadow-2xl sm:rounded-l-3xl">
+      <div className="relative flex max-h-[min(100dvh,720px)] w-full max-w-md flex-col rounded-t-3xl bg-white shadow-2xl sm:h-full sm:max-h-none sm:rounded-none sm:rounded-l-3xl">
         <div className="flex items-start justify-between border-b border-sk-border px-6 py-4">
           <div>
             <h2 id="login-title" className="font-display text-xl font-semibold text-sk-brown">

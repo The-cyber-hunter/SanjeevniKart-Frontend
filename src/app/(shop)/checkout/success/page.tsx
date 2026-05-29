@@ -6,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 
 import { RequireAuth } from "@/components/auth/require-auth";
-import { ShopLayout } from "@/components/layout/shop-layout";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
@@ -62,12 +61,10 @@ function SuccessContent() {
 
 export default function CheckoutSuccessPage() {
   return (
-    <ShopLayout>
-      <RequireAuth>
-        <Suspense fallback={<p className="py-20 text-center text-sk-muted">Loading…</p>}>
-          <SuccessContent />
-        </Suspense>
-      </RequireAuth>
-    </ShopLayout>
+    <RequireAuth>
+      <Suspense fallback={<p className="py-20 text-center text-sk-muted">Loading…</p>}>
+        <SuccessContent />
+      </Suspense>
+    </RequireAuth>
   );
 }

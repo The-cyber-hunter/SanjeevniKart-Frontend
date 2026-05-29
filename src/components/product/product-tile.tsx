@@ -16,9 +16,12 @@ function displayKg(grams: number) {
 export function ProductTile({
   product,
   layout = "card",
+  compact = false,
 }: {
   product: Product;
   layout?: "card" | "row";
+  /** Denser card for 2-column mobile shop grids */
+  compact?: boolean;
 }) {
   const { getCartQuantity, addToCart, updateQuantity, userProfile, openLogin } = useShop();
   const qty = userProfile ? getCartQuantity(product.id) : 0;
@@ -74,32 +77,50 @@ export function ProductTile({
   }
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-sk-border bg-white transition hover:-translate-y-0.5 hover:border-sk-primary/25 hover:shadow-xl">
-      <div className="relative aspect-[4/3] bg-gradient-to-b from-[#faf6f0] to-white p-4">
+    <article
+      className={`group flex flex-col overflow-hidden border border-sk-border bg-white transition hover:border-sk-primary/25 hover:shadow-lg ${
+        compact ? "rounded-xl hover:shadow-md" : "rounded-2xl hover:-translate-y-0.5 hover:shadow-xl"
+      }`}
+    >
+      <div
+        className={`relative bg-gradient-to-b from-[#faf6f0] to-white ${
+          compact ? "aspect-square p-2" : "aspect-[4/3] p-4"
+        }`}
+      >
         {product.image ? (
           <Image
             src={product.image}
             alt={product.name}
             fill
-            className="object-contain p-4 transition group-hover:scale-105"
+            className={`object-contain transition group-hover:scale-105 ${compact ? "p-1" : "p-4"}`}
             unoptimized
           />
         ) : (
-          <span className="flex h-full items-center justify-center text-5xl">🥬</span>
+          <span className={`flex h-full items-center justify-center ${compact ? "text-3xl" : "text-5xl"}`}>
+            🥬
+          </span>
         )}
         {product.popular ? (
-          <span className="absolute left-3 top-3 rounded-full bg-sk-amber px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+          <span
+            className={`absolute rounded-full bg-sk-amber font-bold uppercase tracking-wide text-white ${
+              compact ? "left-1.5 top-1.5 px-1.5 py-0.5 text-[8px]" : "left-3 top-3 px-2.5 py-0.5 text-[10px]"
+            }`}
+          >
             Popular
           </span>
         ) : null}
       </div>
-      <div className="flex flex-1 flex-col border-t border-sk-border/80 p-4">
-        <h3 className="font-semibold leading-snug text-sk-body">{product.name}</h3>
-        <p className="mt-1 text-sm text-sk-muted">
+      <div className={`flex flex-1 flex-col border-t border-sk-border/80 ${compact ? "p-2.5" : "p-4"}`}>
+        <h3
+          className={`font-semibold leading-snug text-sk-body ${compact ? "line-clamp-2 text-sm" : ""}`}
+        >
+          {product.name}
+        </h3>
+        <p className={`text-sk-muted ${compact ? "mt-0.5 text-xs" : "mt-1 text-sm"}`}>
           ₹{product.price}
           <span className="text-sk-muted/80"> / kg</span>
         </p>
-        <div className="mt-auto pt-4">
+        <div className={compact ? "mt-auto pt-2" : "mt-auto pt-4"}>
           {qty > 0 ? (
             <QtyControls
               qty={qty}
@@ -116,15 +137,19 @@ export function ProductTile({
             <button
               type="button"
               onClick={() => guard(() => addToCart(product))}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-sk-primary py-2.5 text-sm font-semibold text-white transition hover:bg-sk-primary-dark"
+              className={`flex w-full items-center justify-center gap-1.5 rounded-lg bg-sk-primary font-semibold text-white transition hover:bg-sk-primary-dark ${
+                compact ? "py-2 text-xs" : "gap-2 rounded-xl py-2.5 text-sm"
+              }`}
             >
-              <ShoppingBag size={16} />
-              {userProfile ? "Add to bag" : "Sign in to add"}
+              <ShoppingBag size={compact ? 14 : 16} />
+              {userProfile ? (compact ? "Add" : "Add to bag") : compact ? "Sign in" : "Sign in to add"}
             </button>
           )}
         </div>
         {qty > 0 ? (
-          <p className="mt-2 text-right text-xs font-medium text-sk-muted">≈ ₹{lineTotal}</p>
+          <p className={`text-right font-medium text-sk-muted ${compact ? "mt-1 text-[10px]" : "mt-2 text-xs"}`}>
+            ≈ ₹{lineTotal}
+          </p>
         ) : null}
       </div>
     </article>
@@ -159,28 +184,36 @@ function QtyControls({
       <button
         type="button"
         onClick={onAdd}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-sk-primary py-2.5 text-sm font-semibold text-white"
+        className={`flex w-full items-center justify-center gap-1.5 rounded-lg bg-sk-primary font-semibold text-white ${
+          compact ? "py-2 text-xs" : "gap-2 rounded-xl py-2.5 text-sm"
+        }`}
       >
-        <ShoppingBag size={16} />
-        {signInLabel ? "Sign in to add" : "Add to bag"}
+        <ShoppingBag size={compact ? 14 : 16} />
+        {signInLabel ? (compact ? "Sign in" : "Sign in to add") : compact ? "Add" : "Add to bag"}
       </button>
     );
   }
 
   return (
-    <div className={compact ? "space-y-2" : "flex flex-col gap-2 sm:items-end"}>
-      <div className="flex items-center justify-between gap-2 rounded-xl border border-sk-border bg-sk-page px-2 py-1.5">
+    <div className={compact ? "space-y-1.5" : "flex w-full min-w-0 flex-col gap-2 sm:items-end"}>
+      <div
+        className={`flex w-full min-w-0 items-center justify-between rounded-lg border border-sk-border bg-sk-page ${
+          compact ? "gap-0.5 px-1 py-1" : "gap-1 rounded-xl px-1.5 py-1.5 sm:gap-2 sm:px-2"
+        }`}
+      >
         <button
           type="button"
           onClick={onMinus}
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-sk-primary hover:bg-white"
+          className={`flex items-center justify-center rounded-md text-sk-primary hover:bg-white ${
+            compact ? "h-7 w-7" : "h-9 w-9 rounded-lg"
+          }`}
           aria-label="Decrease"
         >
-          <Minus size={16} />
+          <Minus size={compact ? 14 : 16} />
         </button>
-        <div className="flex items-center gap-1 text-sm font-semibold">
+        <div className={`flex items-center gap-0.5 font-semibold ${compact ? "text-xs" : "gap-1 text-sm"}`}>
           <input
-            className="w-12 bg-transparent text-center outline-none"
+            className={`bg-transparent text-center outline-none ${compact ? "w-9" : "w-12"}`}
             value={manualKg ?? displayKg(qty)}
             onChange={(e) =>
               setManualKg(e.target.value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1"))
@@ -192,19 +225,23 @@ function QtyControls({
         <button
           type="button"
           onClick={onPlus}
-          className="flex h-9 w-9 items-center justify-center rounded-lg bg-sk-primary text-white"
+          className={`flex items-center justify-center rounded-md bg-sk-primary text-white ${
+            compact ? "h-7 w-7" : "h-9 w-9 rounded-lg"
+          }`}
           aria-label="Increase"
         >
-          <Plus size={16} />
+          <Plus size={compact ? 14 : 16} />
         </button>
       </div>
-      <button
-        type="button"
-        onClick={onRemove}
-        className="text-xs font-medium text-sk-error hover:underline"
-      >
-        Remove
-      </button>
+      {!compact ? (
+        <button
+          type="button"
+          onClick={onRemove}
+          className="text-xs font-medium text-sk-error hover:underline"
+        >
+          Remove
+        </button>
+      ) : null}
     </div>
   );
 }

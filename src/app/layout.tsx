@@ -1,8 +1,14 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DM_Sans, Fraunces } from "next/font/google";
 
 import { ShopProvider } from "@/context/shop-context";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -28,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${dmSans.variable} ${fraunces.variable} h-full`}>
-      <body className="min-h-full antialiased">
+      <body className="min-h-full w-full min-w-0 overflow-x-clip antialiased">
         <ShopProvider>{children}</ShopProvider>
       </body>
     </html>

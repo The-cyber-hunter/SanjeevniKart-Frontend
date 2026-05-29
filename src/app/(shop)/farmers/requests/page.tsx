@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import { RequireAuth } from "@/components/auth/require-auth";
-import { ShopLayout } from "@/components/layout/shop-layout";
 import { useShop } from "@/context/shop-context";
 import { api } from "@/lib/api";
 import type { FarmerSellOrder, FarmerSellOrderStatus } from "@/lib/types";
@@ -78,7 +77,7 @@ function SellRequestsContent() {
         <div className="mt-10 rounded-2xl border border-sk-border bg-white p-8 text-center">
           <p className="font-semibold text-sk-brown">No sell requests yet</p>
           <p className="mt-2 text-sm text-sk-muted">
-            Add crops from the farmer supply page and submit your supply list.
+            Add crops from Sell to us and submit your selling cart.
           </p>
           <Link
             href="/farmers"
@@ -144,13 +143,11 @@ function SellRequestsContent() {
 
 export default function FarmersRequestsPage() {
   return (
-    <ShopLayout>
-      <RequireAuth
-        title="Sign in to track requests"
-        description="Your sell requests are linked to your account email or phone."
-      >
-        <SellRequestsContent />
-      </RequireAuth>
-    </ShopLayout>
+    <RequireAuth
+      title="Sign in to track requests"
+      description="Your sell requests are linked to your account email or phone."
+    >
+      <SellRequestsContent />
+    </RequireAuth>
   );
 }

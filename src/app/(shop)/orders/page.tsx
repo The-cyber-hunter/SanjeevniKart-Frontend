@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 
 import { RequireAuth } from "@/components/auth/require-auth";
-import { ShopLayout } from "@/components/layout/shop-layout";
 import { useShop } from "@/context/shop-context";
 
 function OrdersList() {
@@ -27,11 +26,11 @@ function OrdersList() {
               key={order.id}
               className="overflow-hidden rounded-2xl border border-sk-border bg-white"
             >
-              <div className="flex items-center justify-between border-b border-sk-border bg-sk-page px-5 py-3">
-                <span className="font-mono text-sm font-semibold">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-sk-border bg-sk-page px-4 py-3 sm:px-5">
+                <span className="font-mono text-sm font-semibold break-all">
                   #{order.id.slice(-8).toUpperCase()}
                 </span>
-                <span className="rounded-full bg-sk-header px-3 py-1 text-xs font-bold text-sk-primary">
+                <span className="shrink-0 rounded-full bg-sk-header px-3 py-1 text-xs font-bold text-sk-primary">
                   {order.status}
                 </span>
               </div>
@@ -62,13 +61,11 @@ function OrdersList() {
 
 export default function OrdersPage() {
   return (
-    <ShopLayout>
-      <RequireAuth
-        title="Sign in to view orders"
-        description="Order history is available for signed-in customers only."
-      >
-        <OrdersList />
-      </RequireAuth>
-    </ShopLayout>
+    <RequireAuth
+      title="Sign in to view orders"
+      description="Order history is available for signed-in customers only."
+    >
+      <OrdersList />
+    </RequireAuth>
   );
 }

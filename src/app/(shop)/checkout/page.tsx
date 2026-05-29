@@ -7,7 +7,6 @@ import Script from "next/script";
 import { RequireAuth } from "@/components/auth/require-auth";
 import { BackToCartLink } from "@/components/shop/back-to-cart-link";
 import { DeliveryForm } from "@/components/checkout/delivery-form";
-import { ShopLayout } from "@/components/layout/shop-layout";
 import { useShop } from "@/context/shop-context";
 import { api, getApiErrorMessage } from "@/lib/api";
 import {
@@ -190,7 +189,7 @@ function CheckoutForm() {
 
           <aside className="h-fit rounded-2xl border border-sk-border bg-white p-6 shadow-md lg:sticky lg:top-24">
             <h2 className="font-display text-xl font-semibold">Pay ₹{payableAmount.toFixed(0)}</h2>
-            <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="mt-4 grid grid-cols-1 gap-3 min-[400px]:grid-cols-2">
               <button
                 type="button"
                 onClick={() => setMethod("cod")}
@@ -238,10 +237,8 @@ function CheckoutForm() {
 
 export default function CheckoutPage() {
   return (
-    <ShopLayout>
-      <RequireAuth title="Sign in to checkout" description="You must be signed in to place an order.">
-        <CheckoutForm />
-      </RequireAuth>
-    </ShopLayout>
+    <RequireAuth title="Sign in to checkout" description="You must be signed in to place an order.">
+      <CheckoutForm />
+    </RequireAuth>
   );
 }

@@ -40,47 +40,47 @@ export function LandingPage() {
         <div className="pointer-events-none absolute -right-20 top-10 h-72 w-72 rounded-full bg-[#ffe2bf]/50 blur-3xl" />
         <div className="pointer-events-none absolute bottom-0 left-0 h-48 w-48 rounded-full bg-[#d4e8d4]/40 blur-3xl" />
 
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">
-          <div>
+        <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-12 sm:gap-12 sm:px-6 sm:py-16 lg:grid-cols-2 lg:py-24">
+          <div className="min-w-0">
             {topPromo ? (
               <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-sk-header-border bg-white/70 px-4 py-1.5 text-xs font-semibold text-sk-amber">
                 <span className="h-1.5 w-1.5 rounded-full bg-sk-success" />
                 {topPromo.title} — {formatPromotionDiscount(topPromo)}
               </p>
             ) : null}
-            <h1 className="font-display text-4xl font-semibold leading-[1.15] tracking-tight text-sk-brown sm:text-5xl lg:text-[3.25rem]">
+            <h1 className="font-display text-3xl font-semibold leading-[1.15] tracking-tight text-sk-brown sm:text-4xl md:text-5xl lg:text-[3.25rem]">
               Groceries from the farm, at your door in minutes.
             </h1>
-            <p className="mt-5 max-w-lg text-lg leading-relaxed text-sk-ink-soft">
+            <p className="mt-4 max-w-lg text-base leading-relaxed text-sk-ink-soft sm:mt-5 sm:text-lg">
               Sanjeevni Kart connects you to fresh vegetables, fruits, grains, and spices —
               sourced directly from local growers with quality you can taste.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap">
               <Link
                 href="/shop"
-                className="inline-flex items-center gap-2 rounded-full bg-sk-primary px-7 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:bg-sk-primary-dark"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-sk-primary px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-sk-primary-dark sm:px-7 sm:py-3.5"
               >
                 Start shopping
                 <ArrowRight size={18} />
               </Link>
               <Link
                 href="/farmers"
-                className="inline-flex items-center gap-2 rounded-full border-2 border-sk-primary/30 bg-white px-7 py-3.5 text-sm font-semibold text-sk-brown transition hover:border-sk-primary"
+                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-sk-primary/30 bg-white px-6 py-3 text-sm font-semibold text-sk-brown transition hover:border-sk-primary sm:px-7 sm:py-3.5"
               >
                 Sell your harvest
               </Link>
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-            <div className="relative flex aspect-square flex-col overflow-hidden rounded-[2rem] border border-[#ead8c4] bg-gradient-to-b from-[#faf3ea] to-[#f0e4d4] px-8 pt-5 pb-24 shadow-2xl shadow-sk-primary/10 sm:pt-6 sm:pb-28">
+          <div className="relative mx-auto w-full min-w-0 max-w-sm sm:max-w-md lg:max-w-none">
+            <div className="relative flex aspect-square flex-col overflow-hidden rounded-3xl border border-[#ead8c4] bg-gradient-to-b from-[#faf3ea] to-[#f0e4d4] px-5 pt-4 pb-20 shadow-2xl shadow-sk-primary/10 sm:rounded-[2rem] sm:px-8 sm:pt-6 sm:pb-28">
               <div className="flex flex-1 items-center justify-center">
                 <Image
                   src="/app-icon-512.png"
                   alt="Sanjeevni Kart"
                   width={280}
                   height={280}
-                  className="drop-shadow-md"
+                  className="h-auto w-[min(72%,240px)] drop-shadow-md sm:w-[min(80%,280px)]"
                   priority
                 />
               </div>
@@ -124,12 +124,12 @@ export function LandingPage() {
           </div>
           <ViewFullCatalogLink />
         </div>
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 [&>a]:min-h-[11.5rem]">
+        <div className="mt-8 grid grid-cols-1 gap-4 min-[400px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
           {categories.map((c) => (
             <Link
               key={c.id}
               href={`/shop?category=${encodeURIComponent(c.id)}`}
-              className="group flex h-full min-h-[11.5rem] flex-col rounded-2xl border border-sk-border bg-gradient-to-b from-white to-[#faf6f0] p-5 transition duration-200 hover:-translate-y-0.5 hover:border-sk-primary/40 hover:shadow-lg hover:shadow-sk-primary/10"
+              className="group flex min-h-[10.5rem] flex-col rounded-2xl border border-sk-border bg-gradient-to-b from-white to-[#faf6f0] p-4 transition duration-200 hover:-translate-y-0.5 hover:border-sk-primary/40 hover:shadow-lg hover:shadow-sk-primary/10 sm:min-h-[11.5rem] sm:p-5"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-sk-header/80 text-3xl">
                 {c.emoji}

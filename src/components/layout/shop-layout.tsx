@@ -14,10 +14,10 @@ export function ShopLayout({
   header?: "default" | "solid";
 }) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen w-full min-w-0 flex-col">
       <SiteHeader variant={header} />
       <ApiStatusBanner />
-      <main className="flex-1">{children}</main>
+      <main className="min-w-0 flex-1 overflow-x-clip">{children}</main>
       <SiteFooter />
       <LoginModal />
     </div>

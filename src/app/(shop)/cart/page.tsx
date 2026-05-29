@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 
 import { RequireAuth } from "@/components/auth/require-auth";
 import { DeliveryForm } from "@/components/checkout/delivery-form";
-import { ShopLayout } from "@/components/layout/shop-layout";
 import { useShop } from "@/context/shop-context";
 import { api, getApiErrorMessage } from "@/lib/api";
 import {
@@ -116,8 +115,8 @@ function CartContent() {
         <div className="space-y-4 lg:col-span-3">
           <ul className="space-y-4">
             {cart.map((item) => (
-              <li key={item.product.id} className="flex gap-4 rounded-2xl border border-sk-border bg-white p-4">
-                <div className="relative h-20 w-20 shrink-0 rounded-xl bg-[#faf6f0]">
+              <li key={item.product.id} className="flex gap-3 rounded-2xl border border-sk-border bg-white p-3 sm:gap-4 sm:p-4">
+                <div className="relative h-16 w-16 shrink-0 rounded-xl bg-[#faf6f0] sm:h-20 sm:w-20">
                   {item.product.image ? (
                     <Image src={item.product.image} alt="" fill className="object-contain p-1" unoptimized />
                   ) : (
@@ -131,7 +130,7 @@ function CartContent() {
                       ₹{item.product.price}/kg · {(item.quantity / 1000).toFixed(2)} kg
                     </p>
                   </div>
-                  <div className="mt-2 flex items-center gap-3">
+                  <div className="mt-2 flex flex-wrap items-center gap-2 sm:gap-3">
                     <div className="flex items-center rounded-lg border border-sk-border">
                       <button type="button" className="px-3 py-2 font-bold text-sk-primary" onClick={() => updateQuantity(item.product.id, item.quantity - WEIGHT_STEP_GRAMS)}>−</button>
                       <span className="min-w-[3rem] text-center text-sm font-semibold">{(item.quantity / 1000).toFixed(2)}</span>
@@ -227,10 +226,8 @@ function CartContent() {
 
 export default function CartPage() {
   return (
-    <ShopLayout>
-      <RequireAuth title="Sign in to view your cart" description="Your cart is available after you sign in.">
-        <CartContent />
-      </RequireAuth>
-    </ShopLayout>
+    <RequireAuth title="Sign in to view your cart" description="Your cart is available after you sign in.">
+      <CartContent />
+    </RequireAuth>
   );
 }

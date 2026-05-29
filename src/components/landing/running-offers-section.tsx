@@ -112,7 +112,7 @@ export function RunningOffersAnnouncement({ promotions }: { promotions: Promotio
     );
   }
   return (
-    <div className="border-b border-sk-header-border bg-sk-header py-2.5 text-center text-xs font-semibold text-sk-amber sm:text-sm">
+    <div className="border-b border-sk-header-border bg-sk-header px-4 py-2.5 text-center text-xs font-semibold break-words text-sk-amber sm:text-sm">
       Running offer: {top.title} • {formatPromotionDiscount(top).replace(" off", " OFF")}
     </div>
   );

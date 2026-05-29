@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { LogOut, MapPin, Package } from "lucide-react";
 
-import { ShopLayout } from "@/components/layout/shop-layout";
 import { useShop } from "@/context/shop-context";
 
 export default function AccountPage() {
@@ -18,8 +17,7 @@ export default function AccountPage() {
       .join("") || "?";
 
   return (
-    <ShopLayout>
-      <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start">
           <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-sk-primary font-display text-3xl font-semibold text-white">
             {initials}
@@ -91,6 +89,5 @@ export default function AccountPage() {
           </button>
         ) : null}
       </div>
-    </ShopLayout>
   );
 }
