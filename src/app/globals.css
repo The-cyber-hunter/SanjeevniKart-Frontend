@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+:root {
+  --sk-primary: #8b5e3c;
+  --sk-primary-dark: #6f4e37;
+  --sk-brown: #5b3a29;
+  --sk-amber: #7a4b00;
+  --sk-page: #f8f7f4;
+  --sk-header: #f3e6d8;
+  --sk-header-border: #e7cfb8;
+  --sk-card-cream: #fffdf9;
+  --sk-border: #ece7df;
+  --sk-success: #2f7d4b;
+  --sk-success-dark: #166534;
+  --sk-error: #b91c1c;
+  --sk-muted: #64748b;
+  --sk-body: #1f2937;
+  --sk-ink-soft: #4a3427;
+}
+
+@theme inline {
+  --color-sk-primary: var(--sk-primary);
+  --color-sk-primary-dark: var(--sk-primary-dark);
+  --color-sk-brown: var(--sk-brown);
+  --color-sk-amber: var(--sk-amber);
+  --color-sk-page: var(--sk-page);
+  --color-sk-header: var(--sk-header);
+  --color-sk-header-border: var(--sk-header-border);
+  --color-sk-card-cream: var(--sk-card-cream);
+  --color-sk-border: var(--sk-border);
+  --color-sk-success: var(--sk-success);
+  --color-sk-success-dark: var(--sk-success-dark);
+  --color-sk-error: var(--sk-error);
+  --color-sk-muted: var(--sk-muted);
+  --color-sk-ink-soft: var(--sk-ink-soft);
+  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--sk-page);
+  color: var(--sk-body);
+  font-family: var(--font-sans);
+}
+
+button:not(:disabled),
+[role="button"]:not(:disabled),
+input[type="button"]:not(:disabled),
+input[type="submit"]:not(:disabled),
+input[type="reset"]:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled,
+[role="button"][aria-disabled="true"],
+input[type="button"]:disabled,
+input[type="submit"]:disabled,
+input[type="reset"]:disabled {
+  cursor: not-allowed;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.sk-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
