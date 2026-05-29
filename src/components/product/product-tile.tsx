@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Minus, Plus, ShoppingBag } from "lucide-react";
 
 import { WEIGHT_STEP_GRAMS } from "@/lib/constants";
 import type { Product } from "@/lib/types";
@@ -12,7 +11,7 @@ function displayKg(grams: number) {
   return String(Number((grams / 1000).toFixed(2)));
 }
 
-/** Web-native product tile — horizontal layout option via `layout` */
+/** Web product tile — `compact` matches the mobile app card grid. */
 export function ProductTile({
   product,
   layout = "card",
@@ -20,7 +19,6 @@ export function ProductTile({
 }: {
   product: Product;
   layout?: "card" | "row";
-  /** Denser card for 2-column mobile shop grids */
   compact?: boolean;
 }) {
   const { getCartQuantity, addToCart, updateQuantity, userProfile, openLogin } = useShop();
@@ -43,12 +41,10 @@ export function ProductTile({
     setManualKg(null);
   };
 
-  const lineTotal = ((product.price * (qty || WEIGHT_STEP_GRAMS)) / 1000).toFixed(0);
-
   if (layout === "row") {
     return (
       <article className="group flex gap-4 rounded-2xl border border-sk-border bg-white p-4 transition hover:border-sk-primary/30 hover:shadow-lg">
-        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-[#faf6f0]">
+        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-white">
           {product.image ? (
             <Image src={product.image} alt={product.name} fill className="object-contain p-2" unoptimized />
           ) : (
@@ -58,9 +54,89 @@ export function ProductTile({
         <div className="flex min-w-0 flex-1 flex-col justify-between sm:flex-row sm:items-center">
           <div>
             <h3 className="font-semibold text-sk-body">{product.name}</h3>
-            <p className="mt-0.5 text-sm text-sk-muted">₹{product.price} / kg</p>
+            <p className="mt-0.5 text-sm font-bold text-sk-muted">₹{product.price}/kg</p>
           </div>
-          <QtyControls
+          <div className="mt-2 sm:mt-0">
+            <AppQtyControls
+              qty={qty}
+              manualKg={manualKg}
+              setManualKg={setManualKg}
+              applyManual={applyManual}
+              onAdd={() => guard(() => addToCart(product))}
+              onMinus={() => guard(() => updateQuantity(product.id, qty - WEIGHT_STEP_GRAMS))}
+              onPlus={() => guard(() => updateQuantity(product.id, qty + WEIGHT_STEP_GRAMS))}
+              onRemove={() => guard(() => updateQuantity(product.id, 0))}
+              signInLabel={!userProfile}
+              inline
+            />
+          </div>
+        </div>
+      </article>
+    );
+  }
+
+  if (compact) {
+    return (
+      <article className="flex flex-col rounded-[14px] border border-sk-border bg-white p-[11px] shadow-[0_3px_8px_rgba(139,94,60,0.06)]">
+        <div className="relative h-[108px] w-full overflow-hidden rounded-[10px] bg-white">
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-contain"
+              unoptimized
+            />
+          ) : (
+            <span className="flex h-full items-center justify-center text-3xl">🥬</span>
+          )}
+        </div>
+        <div className="mt-2 min-w-0">
+          <h3 className="truncate text-sm font-bold text-sk-body">{product.name}</h3>
+          <p className="mt-0.5 text-xs font-bold text-sk-muted">₹{product.price}/kg</p>
+          <div className="mt-2">
+            <AppQtyControls
+              qty={qty}
+              manualKg={manualKg}
+              setManualKg={setManualKg}
+              applyManual={applyManual}
+              onAdd={() => guard(() => addToCart(product))}
+              onMinus={() => guard(() => updateQuantity(product.id, qty - WEIGHT_STEP_GRAMS))}
+              onPlus={() => guard(() => updateQuantity(product.id, qty + WEIGHT_STEP_GRAMS))}
+              onRemove={() => guard(() => updateQuantity(product.id, 0))}
+              signInLabel={!userProfile}
+            />
+          </div>
+        </div>
+      </article>
+    );
+  }
+
+  return (
+    <article className="group flex flex-col overflow-hidden rounded-2xl border border-sk-border bg-white transition hover:-translate-y-0.5 hover:border-sk-primary/25 hover:shadow-xl">
+      <div className="relative aspect-[4/3] bg-gradient-to-b from-[#faf6f0] to-white p-4">
+        {product.image ? (
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-contain p-4 transition group-hover:scale-105"
+            unoptimized
+          />
+        ) : (
+          <span className="flex h-full items-center justify-center text-5xl">🥬</span>
+        )}
+        {product.popular ? (
+          <span className="absolute left-3 top-3 rounded-full bg-sk-amber px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+            Popular
+          </span>
+        ) : null}
+      </div>
+      <div className="flex flex-1 flex-col border-t border-sk-border/80 p-4">
+        <h3 className="font-semibold leading-snug text-sk-body">{product.name}</h3>
+        <p className="mt-1 text-sm font-bold text-sk-muted">₹{product.price}/kg</p>
+        <div className="mt-auto pt-4">
+          <AppQtyControls
             qty={qty}
             manualKg={manualKg}
             setManualKg={setManualKg}
@@ -72,91 +148,12 @@ export function ProductTile({
             signInLabel={!userProfile}
           />
         </div>
-      </article>
-    );
-  }
-
-  return (
-    <article
-      className={`group flex flex-col overflow-hidden border border-sk-border bg-white transition hover:border-sk-primary/25 hover:shadow-lg ${
-        compact ? "rounded-xl hover:shadow-md" : "rounded-2xl hover:-translate-y-0.5 hover:shadow-xl"
-      }`}
-    >
-      <div
-        className={`relative bg-gradient-to-b from-[#faf6f0] to-white ${
-          compact ? "aspect-square p-2" : "aspect-[4/3] p-4"
-        }`}
-      >
-        {product.image ? (
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className={`object-contain transition group-hover:scale-105 ${compact ? "p-1" : "p-4"}`}
-            unoptimized
-          />
-        ) : (
-          <span className={`flex h-full items-center justify-center ${compact ? "text-3xl" : "text-5xl"}`}>
-            🥬
-          </span>
-        )}
-        {product.popular ? (
-          <span
-            className={`absolute rounded-full bg-sk-amber font-bold uppercase tracking-wide text-white ${
-              compact ? "left-1.5 top-1.5 px-1.5 py-0.5 text-[8px]" : "left-3 top-3 px-2.5 py-0.5 text-[10px]"
-            }`}
-          >
-            Popular
-          </span>
-        ) : null}
-      </div>
-      <div className={`flex flex-1 flex-col border-t border-sk-border/80 ${compact ? "p-2.5" : "p-4"}`}>
-        <h3
-          className={`font-semibold leading-snug text-sk-body ${compact ? "line-clamp-2 text-sm" : ""}`}
-        >
-          {product.name}
-        </h3>
-        <p className={`text-sk-muted ${compact ? "mt-0.5 text-xs" : "mt-1 text-sm"}`}>
-          ₹{product.price}
-          <span className="text-sk-muted/80"> / kg</span>
-        </p>
-        <div className={compact ? "mt-auto pt-2" : "mt-auto pt-4"}>
-          {qty > 0 ? (
-            <QtyControls
-              qty={qty}
-              manualKg={manualKg}
-              setManualKg={setManualKg}
-              applyManual={applyManual}
-              compact
-              onAdd={() => guard(() => addToCart(product))}
-              onMinus={() => guard(() => updateQuantity(product.id, qty - WEIGHT_STEP_GRAMS))}
-              onPlus={() => guard(() => updateQuantity(product.id, qty + WEIGHT_STEP_GRAMS))}
-              onRemove={() => guard(() => updateQuantity(product.id, 0))}
-            />
-          ) : (
-            <button
-              type="button"
-              onClick={() => guard(() => addToCart(product))}
-              className={`flex w-full items-center justify-center gap-1.5 rounded-lg bg-sk-primary font-semibold text-white transition hover:bg-sk-primary-dark ${
-                compact ? "py-2 text-xs" : "gap-2 rounded-xl py-2.5 text-sm"
-              }`}
-            >
-              <ShoppingBag size={compact ? 14 : 16} />
-              {userProfile ? (compact ? "Add" : "Add to bag") : compact ? "Sign in" : "Sign in to add"}
-            </button>
-          )}
-        </div>
-        {qty > 0 ? (
-          <p className={`text-right font-medium text-sk-muted ${compact ? "mt-1 text-[10px]" : "mt-2 text-xs"}`}>
-            ≈ ₹{lineTotal}
-          </p>
-        ) : null}
       </div>
     </article>
   );
 }
 
-function QtyControls({
+function AppQtyControls({
   qty,
   manualKg,
   setManualKg,
@@ -165,8 +162,9 @@ function QtyControls({
   onMinus,
   onPlus,
   onRemove,
-  compact,
   signInLabel,
+  addLabel = "ADD",
+  inline,
 }: {
   qty: number;
   manualKg: string | null;
@@ -176,72 +174,66 @@ function QtyControls({
   onMinus: () => void;
   onPlus: () => void;
   onRemove: () => void;
-  compact?: boolean;
   signInLabel?: boolean;
+  addLabel?: string;
+  inline?: boolean;
 }) {
+  const widthClass = inline ? "w-full max-w-xs sm:w-auto" : "w-full";
+
   if (qty <= 0) {
     return (
       <button
         type="button"
         onClick={onAdd}
-        className={`flex w-full items-center justify-center gap-1.5 rounded-lg bg-sk-primary font-semibold text-white ${
-          compact ? "py-2 text-xs" : "gap-2 rounded-xl py-2.5 text-sm"
+        className={`flex h-[34px] items-center justify-center rounded-lg bg-sk-primary ${widthClass} ${
+          inline ? "px-6" : ""
         }`}
       >
-        <ShoppingBag size={compact ? 14 : 16} />
-        {signInLabel ? (compact ? "Sign in" : "Sign in to add") : compact ? "Add" : "Add to bag"}
+        <span className="text-[11px] font-extrabold tracking-wide text-white">
+          {signInLabel ? "SIGN IN" : addLabel}
+        </span>
       </button>
     );
   }
 
   return (
-    <div className={compact ? "space-y-1.5" : "flex w-full min-w-0 flex-col gap-2 sm:items-end"}>
-      <div
-        className={`flex w-full min-w-0 items-center justify-between rounded-lg border border-sk-border bg-sk-page ${
-          compact ? "gap-0.5 px-1 py-1" : "gap-1 rounded-xl px-1.5 py-1.5 sm:gap-2 sm:px-2"
-        }`}
-      >
+    <div className={widthClass}>
+      <div className="flex w-full items-center justify-between">
         <button
           type="button"
           onClick={onMinus}
-          className={`flex items-center justify-center rounded-md text-sk-primary hover:bg-white ${
-            compact ? "h-7 w-7" : "h-9 w-9 rounded-lg"
-          }`}
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-sk-primary bg-white text-base font-bold text-sk-primary"
           aria-label="Decrease"
         >
-          <Minus size={compact ? 14 : 16} />
+          −
         </button>
-        <div className={`flex items-center gap-0.5 font-semibold ${compact ? "text-xs" : "gap-1 text-sm"}`}>
+        <div className="flex min-w-0 flex-1 items-center justify-center px-1">
           <input
-            className={`bg-transparent text-center outline-none ${compact ? "w-9" : "w-12"}`}
+            className="h-7 w-14 rounded-md border border-slate-300 bg-white text-center text-sm font-semibold text-sk-body outline-none"
             value={manualKg ?? displayKg(qty)}
             onChange={(e) =>
               setManualKg(e.target.value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1"))
             }
             onBlur={applyManual}
           />
-          <span className="text-sk-muted">kg</span>
+          <span className="ml-1 text-xs font-bold text-sk-muted">kg</span>
         </div>
         <button
           type="button"
           onClick={onPlus}
-          className={`flex items-center justify-center rounded-md bg-sk-primary text-white ${
-            compact ? "h-7 w-7" : "h-9 w-9 rounded-lg"
-          }`}
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sk-primary text-base font-bold text-white"
           aria-label="Increase"
         >
-          <Plus size={compact ? 14 : 16} />
+          +
         </button>
       </div>
-      {!compact ? (
-        <button
-          type="button"
-          onClick={onRemove}
-          className="text-xs font-medium text-sk-error hover:underline"
-        >
-          Remove
-        </button>
-      ) : null}
+      <button
+        type="button"
+        onClick={onRemove}
+        className="mt-1.5 w-full text-center text-[11px] font-semibold text-sk-error"
+      >
+        Remove
+      </button>
     </div>
   );
 }

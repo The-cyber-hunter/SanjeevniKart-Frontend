@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Search, SlidersHorizontal } from "lucide-react";
+
 import { SellProductTile } from "@/components/farmers/sell-product-tile";
+import { PRODUCT_GRID_CLASS } from "@/components/product/product-grid";
 import { SellCartFloatingBar } from "@/components/farmers/sell-cart-floating-bar";
 import { TrackRequestsLink } from "@/components/farmers/track-requests-link";
 import { CART_FLOATING_BAR_PADDING } from "@/components/shop/cart-floating-bar-padding";
@@ -22,15 +25,29 @@ export default function FarmersPage() {
     fetchInitialData,
   } = useShop();
   const [categoryId, setCategoryId] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [view, setView] = useState<"grid" | "list">("grid");
 
   useEffect(() => {
     fetchInitialData();
   }, [fetchInitialData]);
 
   const filtered = useMemo(() => {
-    if (!categoryId) return products;
-    return products.filter((p) => (p.categoryId ?? "").trim() === categoryId.trim());
-  }, [products, categoryId]);
+    let list = products;
+    if (categoryId) {
+      list = list.filter((p) => (p.categoryId ?? "").trim() === categoryId.trim());
+    }
+    const q = query.trim().toLowerCase();
+    if (!q) return list;
+    return list.filter((p) => {
+      const cat = categories.find((c) => c.id === p.categoryId)?.name.toLowerCase() ?? "";
+      return (
+        p.name.toLowerCase().includes(q) ||
+        p.unit.toLowerCase().includes(q) ||
+        cat.includes(q)
+      );
+    });
+  }, [products, categories, categoryId, query]);
 
   const activeCategory = categories.find((c) => c.id === categoryId);
 
@@ -49,6 +66,39 @@ export default function FarmersPage() {
               </p>
             </div>
             <TrackRequestsLink compact className="shrink-0 self-start sm:self-auto" />
+          </div>
+          <div className="mt-4 flex flex-col gap-3 sm:mt-6 sm:flex-row">
+            <div className="relative min-w-0 flex-1">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sk-muted sm:left-4" size={18} />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search products to sell…"
+                className="w-full rounded-2xl border border-sk-border bg-sk-page py-3 pl-10 pr-3 text-sm outline-none ring-sk-primary/20 focus:ring-2 sm:py-3.5 sm:pl-11 sm:pr-4"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:shrink-0">
+              <button
+                type="button"
+                onClick={() => setView("grid")}
+                className={`rounded-xl px-3 py-2.5 text-sm font-semibold sm:px-4 sm:py-3 ${
+                  view === "grid" ? "bg-sk-primary text-white" : "border border-sk-border bg-white"
+                }`}
+              >
+                Grid
+              </button>
+              <button
+                type="button"
+                onClick={() => setView("list")}
+                className={`flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold sm:px-4 sm:py-3 ${
+                  view === "list" ? "bg-sk-primary text-white" : "border border-sk-border bg-white"
+                }`}
+              >
+                <SlidersHorizontal size={16} />
+                List
+              </button>
+            </div>
           </div>
         </div>
 
@@ -125,12 +175,20 @@ export default function FarmersPage() {
           <div className="min-w-0 flex-1">
             {filtered.length === 0 ? (
               <p className="py-16 text-center text-sm text-sk-muted sm:py-20">
-                No crops match this category.
+                {query.trim()
+                  ? "No crops match your search."
+                  : "No crops match this category."}
               </p>
-            ) : (
-              <div className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-3">
+            ) : view === "grid" ? (
+              <div className={PRODUCT_GRID_CLASS}>
                 {filtered.map((product) => (
                   <SellProductTile key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-3 sm:space-y-4">
+                {filtered.map((product) => (
+                  <SellProductTile key={product.id} product={product} layout="row" />
                 ))}
               </div>
             )}

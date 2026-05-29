@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Search, SlidersHorizontal } from "lucide-react";
 
 import { ProductTile } from "@/components/product/product-tile";
+import { PRODUCT_GRID_CLASS } from "@/components/product/product-grid";
 import { BuyCartFloatingBar } from "@/components/shop/buy-cart-floating-bar";
 import { CART_FLOATING_BAR_PADDING } from "@/components/shop/cart-floating-bar-padding";
 import { useShop } from "@/context/shop-context";
@@ -169,7 +170,7 @@ export function ShopCatalog() {
             {filtered.length === 0 ? (
               <p className="py-16 text-center text-sm text-sk-muted sm:py-20">No products match your filters.</p>
             ) : view === "grid" ? (
-              <div className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-3">
+              <div className={PRODUCT_GRID_CLASS}>
                 {filtered.map((p) => (
                   <ProductTile key={p.id} product={p} compact />
                 ))}

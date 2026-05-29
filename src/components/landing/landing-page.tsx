@@ -10,6 +10,7 @@ import {
   RunningOffersSection,
 } from "@/components/landing/running-offers-section";
 import { ProductTile } from "@/components/product/product-tile";
+import { PRODUCT_GRID_CLASS } from "@/components/product/product-grid";
 import { BuyCartFloatingBar } from "@/components/shop/buy-cart-floating-bar";
 import { CART_FLOATING_BAR_PADDING } from "@/components/shop/cart-floating-bar-padding";
 import { ViewFullCatalogLink } from "@/components/shop/view-full-catalog-link";
@@ -161,9 +162,9 @@ export function LandingPage() {
               for everything in stock.
             </p>
           ) : (
-            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className={`mt-10 ${PRODUCT_GRID_CLASS}`}>
               {featured.map((p) => (
-                <ProductTile key={p.id} product={p} />
+                <ProductTile key={p.id} product={p} compact />
               ))}
             </div>
           )}
