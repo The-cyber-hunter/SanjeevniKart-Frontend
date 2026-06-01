@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      { source: "/favicon.ico", destination: "/app-icon-512.png", permanent: true },
       { source: "/home", destination: "/", permanent: false },
       { source: "/categories", destination: "/shop", permanent: false },
       { source: "/profile", destination: "/account", permanent: false },

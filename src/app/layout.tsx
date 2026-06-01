@@ -28,7 +28,11 @@ export const metadata: Metadata = {
   title: "Sanjeevni Kart — Farm fresh groceries delivered",
   description:
     "Premium groceries, farmer-direct sourcing, and quick doorstep delivery.",
-  // Icons: app/icon.png & app/apple-icon.png (file convention). Do not use a 512px PNG as favicon.
+  icons: {
+    icon: "/app-icon-512.png",
+    shortcut: "/app-icon-512.png",
+    apple: "/app-icon-512.png",
+  },
 };
 
 export default function RootLayout({
