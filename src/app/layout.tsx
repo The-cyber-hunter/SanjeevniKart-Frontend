@@ -20,11 +20,15 @@ const fraunces = Fraunces({
   variable: "--font-fraunces",
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://www.sanjeevnikart.in";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Sanjeevni Kart — Farm fresh groceries delivered",
   description:
     "Premium groceries, farmer-direct sourcing, and quick doorstep delivery.",
-  icons: { icon: "/app-icon-512.png", apple: "/app-icon-512.png" },
+  // Icons: app/icon.png & app/apple-icon.png (file convention). Do not use a 512px PNG as favicon.
 };
 
 export default function RootLayout({
