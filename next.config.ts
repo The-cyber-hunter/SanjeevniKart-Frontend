@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
       { source: "/sell", destination: "/farmers", permanent: false },
       { source: "/sell/cart", destination: "/farmers/cart", permanent: false },
       { source: "/sell/requests", destination: "/farmers/requests", permanent: false },
+      { source: "/privacy", destination: "/legal/account-deletion", permanent: false },
+      { source: "/privacy-policy", destination: "/legal/privacy", permanent: false },
+      { source: "/account-deletion", destination: "/legal/account-deletion", permanent: false },
+      { source: "/delete-account", destination: "/legal/account-deletion", permanent: false },
     ];
   },
 };

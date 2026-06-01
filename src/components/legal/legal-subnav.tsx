@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 const LEGAL_PAGES = [
   { href: "/legal/privacy", label: "Privacy policy" },
+  { href: "/legal/account-deletion", label: "Delete account" },
   { href: "/legal/terms", label: "Terms of service" },
   { href: "/legal/refunds", label: "Refunds" },
 ] as const;

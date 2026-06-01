@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { LegalPageShell, LegalSection } from "@/components/legal/legal-page-shell";
+
+const DELETION_EMAIL = "sanjeevnikart@gmail.com";
+const DELETION_MAILTO = `mailto:${DELETION_EMAIL}?subject=${encodeURIComponent("Account deletion request — Sanjeevni Kart")}`;
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Sanjeevni Kart",
@@ -119,18 +123,35 @@ export default function PrivacyPolicyPage() {
           <li>Update profile details in the app or website</li>
           <li>Deny location/camera permissions from device settings</li>
           <li>
-            Request account and associated data deletion (see &quot;Account and data deletion&quot;
-            below)
+            Request account and associated data deletion (see{" "}
+            <Link href="/legal/account-deletion" className="font-semibold text-sk-primary hover:underline">
+              Delete your account
+            </Link>{" "}
+            or &quot;Account and data deletion&quot; below)
           </li>
         </ul>
+      </LegalSection>
 
-        <h3 className="mt-6 font-display text-base font-semibold text-sk-brown">
-          Account and data deletion
-        </h3>
-        <p className="mt-3">
+      <LegalSection title="Account and data deletion (Sanjeevni Kart)" id="account-deletion">
+        <div className="rounded-xl border border-sk-border bg-sk-page p-4">
+          <p className="font-semibold text-sk-brown">
+            Delete your Sanjeevni Kart account (mobile app or website)
+          </p>
+          <p className="mt-2">
+            You do not need to log in to request deletion. Use our dedicated page or email us directly:
+          </p>
+          <Link
+            href="/legal/account-deletion"
+            className="mt-3 inline-flex rounded-lg bg-sk-primary px-4 py-2 text-sm font-semibold text-white hover:bg-sk-primary-dark"
+          >
+            Go to account deletion page
+          </Link>
+        </div>
+
+        <p className="mt-4">
           <strong className="text-sk-brown">How to request deletion:</strong> Email{" "}
-          <a href="mailto:sanjeevnikart@gmail.com" className="font-semibold text-sk-primary hover:underline">
-            sanjeevnikart@gmail.com
+          <a href={DELETION_MAILTO} className="font-semibold text-sk-primary hover:underline">
+            {DELETION_EMAIL}
           </a>{" "}
           with the subject line &quot;Account deletion request&quot;. In the message, include the email
           address and phone number registered on your Sanjeevni Kart account, and state that you want your
@@ -140,8 +161,8 @@ export default function PrivacyPolicyPage() {
         <p>
           <strong className="text-sk-brown">What we delete:</strong> After we verify your request, we delete
           or anonymize personal data tied to your account (for example: profile name, email, phone, saved
-          addresses, and order or cart data that we can link to you), except where the law or a legitimate
-          need requires retention as described next.
+          addresses, order or cart data, and farmer sell-program data linked to you), except where the law
+          or a legitimate need requires retention as described next.
         </p>
         <p>
           <strong className="text-sk-brown">What we may keep, and for how long:</strong> We may keep limited

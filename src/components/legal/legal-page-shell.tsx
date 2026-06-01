@@ -43,13 +43,15 @@ export function LegalPageShell({
 
 export function LegalSection({
   title,
+  id,
   children,
 }: {
   title: string;
+  id?: string;
   children: React.ReactNode;
 }) {
   return (
-    <section>
+    <section id={id}>
       <h2 className="font-display text-lg font-semibold text-sk-brown">{title}</h2>
       <div className="mt-3 space-y-3">{children}</div>
     </section>
